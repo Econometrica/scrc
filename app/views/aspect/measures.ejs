@@ -1,0 +1,33 @@
+<div class='container'>
+	<%- partial('site.ejs', {site: site})%>
+	
+	<h4>Measures</h4>
+	
+	<div class="accordion" id="accordion3">
+		<% for( var d in domains ) { %>
+		<div class="accordion-group">
+			<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapse_<%= d %>">
+					<%= domains[d].name %>
+				</a>
+		    </div>
+
+			<div id="collapse_<%= d %>" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class='well well-large'>
+						<ul class='list-group'>
+					<% for( var m in measures ) { if( measures[m].domain_id === domains[d].id ) {%>
+			    		<li class='list-group-item'>
+							<a href='/site/measure/<%= measures[m].id %>?site=<%= site.id %>'><%= measures[m].name %></a>
+						</li>
+					<%}}%>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+		  </div>
+		<% } %>
+	</div>
+
+</div>

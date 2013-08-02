@@ -1,0 +1,36 @@
+<div class='container'>
+	<%- partial('site.ejs', {site: site})%>
+
+	<img src='/img/drgs.jpg'>
+
+	<form id='drgForm' action='/site/drg' method='POST'>
+		<div class="ui-widget" style="width:600px">
+		<label for="tags">Enter DRG code or text: </label>
+		<input id="tags" name='drg' style="width:600px" />
+		<input type='hidden' id='site' name='site' value='<%= site.id %>' /><br/>
+		<button type="button" class="btn btn-primary" onclick="formSubmit()">Submit</button>		
+		</div>
+	</form>
+</div>
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+ <script>
+function formSubmit() {
+	document.getElementById("drgForm").submit();
+}
+
+$(function() {
+	var drgs 			= <%- JSON.stringify(drgs) %>
+	var availableTags 	= [];
+	for( var i in drgs ) {
+		var drg = drgs[i]
+		var str = drg.id + " " + drg.name
+		availableTags.push(str)
+	}
+	
+	$( "#tags" ).autocomplete({
+		source: availableTags
+	});
+});
+</script>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html >
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Bootstrap -->
+	<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	
+	<link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
+	<!--[if lte IE 8]>
+	<link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' />
+	<![endif]-->
+  	<script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+  
+	<title>SCRS Title</title>
+	
+ 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+ 	<script src="/js/bootstrap.min.js"></script>
+	
+	<style type="text/css">
+	      body {
+	        padding-top: 60px;
+	        padding-bottom: 40px;
+	      }
+	      .sidebar-nav {
+	        padding: 9px 0;
+	      }
+
+	      @media (max-width: 980px) {
+	        /* Enable use of floated navbar text */
+	        .navbar-text.pull-right {
+	          float: none;
+	          padding-left: 5px;
+	          padding-right: 5px;
+	        }
+	      }
+		#map {
+		    width:900px;
+		    height:900px;
+		  }
+		.popup {
+		    text-align: center;
+		}
+		.popup img {
+		    width: 100%;
+		}
+		#filters {
+		    position: absolute;
+		    top: 145px;
+		    left: 10px;
+		    z-index: 100;
+		    padding: 5px;
+		    background: #fff;
+		}
+
+		#filters ul {
+		    list-style-type: none;
+		    margin: 0;
+		    padding: 0;
+		}
+	</style>
+	
+  </head>
+
+  <body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+	    <div class="navbar-inner">
+        	<div class="container-fluid">
+          		<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            		<span class="icon-bar"></span>
+            		<span class="icon-bar"></span>
+            		<span class="icon-bar"></span>
+          		</button>
+          		<a class="brand" href="#">SCRS</a>
+          		<div class="nav-collapse collapse">
+	    
+	       	 		<p class="navbar-text pull-right" id='login'>
+		            </p>
+		
+		            <ul class="nav">
+		              <li class="active"><a href="/">Home</a></li>
+		              <li><a href="/about">About</a></li>
+		              <li><a href="/contact">Contact</a></li>
+		            </ul>
+		         </div><!--/.nav-collapse -->
+        	</div>
+      	</div>
+    </div>
+
+	<%- body %>
+	
+	<hr>
+	<footer>
+		<p><a href='http://www.econometricainc.com'><img src='/img/EconometricaLogo.jpg' width='256' /></a></p>
+	</footer>
+</body>
+<html>

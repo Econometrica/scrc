@@ -1,0 +1,52 @@
+<div id='map-ui'>
+    <form id='filters'>
+        <ul>
+            <li><img src='img/image030.gif' />&nbsp;Proprietary</li>
+            <li><img src='img/image061.gif' />&nbsp;Voluntary non-profit - Church</li>
+            <li><img src='img/image063.gif' />&nbsp;Voluntary non-profit - Other</li>
+            <li><img src='img/image046.gif' />&nbsp;Voluntary non-profit - Private</li>
+        </ul>
+    </form>
+</div>
+
+<div id='map'></div>
+<br/>
+<div class='container'>
+	<div class='well'>
+<h4>Summary of Progress</h4>
+	<%- summary %>
+	</div>
+</div>
+
+<script>
+var map = L.mapbox.map('map', 'examples.map-20v6611k')
+    .setView([40, -74.5], 8);
+
+	var geojson = <%- JSON.stringify(geojson) %>
+	
+		// Set a custom icon on each marker based on feature properties
+		map.markerLayer.on('layeradd', function(e) {
+		    var marker = e.layer,
+		        feature = marker.feature;
+			
+			// Create custom popup content
+			var popupContent =  "<table><tr><td><img src='"+feature.properties.image+"' width='64' /></td>" +
+								'<td><table><tr><h4>' + feature.properties.title + '</h4></tr>' +
+								"<tr>"+feature.properties.address+"</tr>" +
+								"<tr><a href='"+feature.properties.website+"'>website</a></tr></table></td></tr></table><hr/>" +
+								"<a href='site/transitions/" + feature.properties.id + "'>Transitions of Care</a><br/>" +
+								"<a href='site/measures/" + feature.properties.id + "'>Measures</a><br/>" +
+								"<a href='site/drgs/" + feature.properties.id + "'>DRG's</a><br/>";
+								
+			
+		    marker.bindPopup(popupContent,{
+		        closeButton: false,
+		        minWidth: 320
+		    });
+		    marker.setIcon(L.icon(feature.properties.icon));
+		});
+	
+		// Add features to the map
+		map.markerLayer.setGeoJSON(geojson);
+</script>
+	
