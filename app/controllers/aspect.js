@@ -32,6 +32,17 @@ function getMeasures( fn ) {
 		fn(err, result.rows)
 	})
 }
+
+//
+// Retrieve all subpopulations
+//
+function getSubpopulations( fn ) {
+	var query = "SELECT * from subpopulations"
+	app.client.query(query, function(err, result) {
+		fn(err, result.rows)
+	})
+}
+
 //
 // Retrieve specific measure
 //
@@ -117,15 +128,24 @@ module.exports = {
 		eyes.inspect(req.body, "body")
 		var id 		= req.body['site']
 		var drg 	= req.body['drg']
+		var subpop 	= req.body['subpop']
+		
 		var arr		= drg.split(' ')
 		var drg_id	= arr[0]
 		
-		getSite(id, function(err, result ) {
+		async.parallel([
+			function(callback) {
+				getSite(id, function(err, result ) {					
+					callback(null, result)
+				})
+			}
+		], function(err, results) {
 			res.render( 'aspect/drg.ejs', 
 				{	layout: 'layout.ejs', 
 					drg: 	drg,
 					drg_id: drg_id,
-					site: 	result
+					subpop:	subpop,
+					site: 	results[0]
 				});	
 		})
 	},
@@ -135,15 +155,31 @@ module.exports = {
 		var id 		= req.params['id']
 		var user 	= req.user
 		console.log('drgs', id)
-		getSite(id, function(err, result ) {
-			if( err != null ) return "Invalid Hospital Site";
-			getDrgs( function(err, drgs ) {
-				res.render( 'aspect/drgs.ejs', 
-					{	layout:'layout.ejs',
-						site: result,
-						drgs: drgs
-					});	
-			});
+		
+		async.parallel([
+			function(callback) {
+				getSite(id, function(err, result ) {					
+					callback(null, result)
+				})
+			},
+			function(callback) {
+				getDrgs( function(err, result ) {					
+					callback(null, result)
+				})
+			},
+			function(callback) {
+				getSubpopulations( function(err, result ) {
+					eyes.inspect(result, "subpop")
+					callback(null, result)
+				})
+			},
+		], function(err, results) {
+			res.render( 'aspect/drgs.ejs', 
+				{	layout: 'layout.ejs', 
+					site: 			results[0],
+					drgs: 			results[1],
+					subpopulations: results[2],
+				});	
 		})
 	}
 }

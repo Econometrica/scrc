@@ -5,6 +5,15 @@
 
 	<form id='drgForm' action='/site/drg' method='POST'>
 		<div class="ui-widget" style="width:600px">
+
+		<label for="subpop">Enter Sub-Population: </label>
+		
+		<select class="selectpicker show-tick" id='subpop' name='subpop'>
+			<% for( var s in subpopulations) {%>
+	    		<option value='<%= subpopulations[s].id %>'><%= subpopulations[s].name %></option>
+	    	<% } %>
+		</select>
+			
 		<label for="tags">Enter DRG code or text: </label>
 		<input id="tags" name='drg' style="width:600px" />
 		<input type='hidden' id='site' name='site' value='<%= site.id %>' /><br/>

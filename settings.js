@@ -4,12 +4,11 @@ var express 		= require('express'),
 	assert			= require('assert'),
 	fs				= require('fs'),
 	path			= require('path'),
-	redis 			= require("redis/index"),
 	debug 			= require('debug')('server'),
 	engines			= require('consolidate'),
 	passport 		= require('passport'),
 	BasicStrategy 	= require('passport-http').BasicStrategy,
-	RedisStore 		= require('connect-redis')(express),
+	PGStore 		= require('connect-pg'),
 	ejs				= require('ejs');
 		
 	exports.boot = function(app){
@@ -36,18 +35,6 @@ var express 		= require('express'),
 
 	app.set('hostBaseUrl', hostBaseUrl)
 	app.set('port', port)
-
-	//var redisHost 		= app.jitsu.REDIS_HOST;
-	//var redisPort 		= app.jitsu.REDIS_PORT;
-	//var redisAuth 		= app.jitsu.REDIS_AUTH;
-
-	//debug('hostBaseUrl:'+hostBaseUrl)
-	//debug('apiBaseUrl:'+apiBaseUrl)
-	//debug('port:'+port)
-
-	//assert(redisHost, 	"set REDIS_HOST in your ENV")
-	//assert(redisPort, 	"set REDIS_PORT in your ENV")
-	//assert(redisAuth, 	"set REDIS_AUTH in your ENV")
 		
 	// Pick a secret to secure your session storage
 	var sessionSecret = 'SCRC-PGC-2012-07';
@@ -96,67 +83,26 @@ function bootApplication(app) {
 	app.use(express.bodyParser())
 	app.use(express.methodOverride())
 
-	// Configure the database
-	// Needs this to store sessions across servers
-	
-	//if( app.settings.env == 'production') {
-		// jitsu databases create redis rip2
-		// jitsu databases list 
-		
-	//	var redisUrl 	= app.jitsu.REDIS_HOST,
-	//    	redisName 	= app.jitsu.REDIS_NAME,
-	//    	redisAuth 	= app.jitsu.REDIS_AUTH,
-	//		redisPort	= app.jitsu.REDIS_PORT;
-
-	//	debug(redisUrl, redisPort, redisAuth, redisName)
-
-	//	app.set('redisHost', 	redisUrl.hostname);
-	//	app.set('redisPort', 	redisUrl.port);
-	//	app.set('redisDb', 		redisName);
-	//	app.set('redisPass', 	redisAuth); 
-
-	//app.db				    = redis.createClient(redisPort, redisUrl);
-		app.db				    = redis.createClient();
-		//app.db.auth(redisAuth, function(err) {
-		//	if( err ) throw err;
-		//	debug("redis connected")
-		//});
-		app.db.debugMode 	= true; 
-		app.db.on("error", function (err) {
-		    debug("Production Redis Database Error " + err);
-		});
-			
-		app.use(express.session({
-		  secret: sessionSecret,
-		  cookie: { maxAge: new Date(Date.now() + 360000)}, //1 Hour
-		  store: new RedisStore({client: app.db})
-		}))
-
-	//var mysql      = require('mysql');
-	//var connection = mysql.createConnection({
-	//	host     : 'geobpms.geobliki.com',
-	//	user     : 'cappelaere',
-	//	password : '1cappelaere2',
-	//	database : 'mysql',
-	//	debug: true,
-	//	//insecureAuth: true
-	//});
-	//connection.connect();
-		
-	//} else {
-	//	debug("* Connecting to localhost redis...");
-	//	app.db			 = redis.createClient();
-	//	app.db.on("error", function (err) {
-	//	    debug("Local Redis Database Error " + err);
-	//	});
-	//	app.use(express.session({
-	//	  secret: sessionSecret,
-	//	  cookie: { maxAge: new Date(Date.now() + 360000)}, //1 Hour
-	//	  store: new RedisStore()
-	//	}))
-	//}
 	var pg = require('pg'); 
 	var conString = "postgres://postgres:postgres@localhost:5432/scrc";
+ 	function pgConnect (callback) {
+		pg.connect(conString,
+		function (err, client) {
+			if (err) {
+				console.log(JSON.stringify(err));
+			}
+			if (client) {
+				callback(client);
+			}
+		});
+    };	
+		
+	app.use(express.session({
+		  secret: sessionSecret,
+		  cookie: { maxAge: new Date(Date.now() + 360000)}, //1 Hour
+		  store: new PGStore(pgConnect)
+	}))
+
 	app.client = new pg.Client(conString);
 	app.client.connect(function(err) {
 	  if(err) {
