@@ -1,4 +1,5 @@
-var util = require('util');
+var util 	= require('util');
+var eyes	= require('eyes');
 
 module.exports = {
   
@@ -22,7 +23,15 @@ module.exports = {
 	},
 	// logout
 	logout: function(req, res) {
-		req.session.destroy();
+		console.log("logged out!!!");
+		eyes.inspect(res.headers, 'headers')
+		req.logOut();
+		//res.session.destroy(); 
+		delete res.session;
+		if( res.headers && res.headers['authorization'] ) delete res.headers['authorization'];
+		if( res.headers && res.headers['cookie'] ) delete res.headers['cookie'];
+		res.clearCookie('userid');
+		res.clearCookie('user');
 		res.redirect('/')
 	}
 };

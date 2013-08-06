@@ -18,15 +18,26 @@ function getSummary(id, fn) {
 	})
 }	
 	
-function getSitesGeoJSON( fn ) {
+function getSitesGeoJSON( user, fn ) {
 	var query = "SELECT * from sites"
 	app.client.query(query, function(err, result) {
 		geojson = {
 			"type": "FeatureCollection",
 			  "features": []
 		}
+		
+		var iconUrl;
+		
+		
 		for( var r in result.rows ) {
 			var row = result.rows[r]
+
+			if( user.site_id == 0 || user.site_id != row.id ) {
+				iconUrl = "img/"+icons[4]
+			} else {
+				iconUrl = "img/"+icons[3]
+			}
+
 			if( row.id >= 10 ) {
 				var feature = {
 					"type": "Feature",
@@ -40,7 +51,8 @@ function getSitesGeoJSON( fn ) {
 						"id": row.id,
 						"image": row.image,
 						"icon": {
-							"iconUrl": "img/"+icons[row.ownership_id],
+							//"iconUrl": "img/"+icons[row.ownership_id],
+							"iconUrl": iconUrl,
 							"iconSize": [10, 10], // size of the icon
 				            "iconAnchor": [5, 5], // point of the icon which will correspond to marker's location
 				            "popupAnchor": [-25, -25]  // point from which the popup should open relative to the iconAnchor
@@ -69,15 +81,17 @@ module.exports = {
 	},
 	
 	index: function(req, res) {
-		console.log("user", req.user)
+		eyes.inspect(req.headers, "headers")
+		eyes.inspect(req.user, "user")
 		async.parallel([
 			function(callback) {
-				getSitesGeoJSON( function(err, result ) {
+				getSitesGeoJSON( req.user, function(err, result ) {
 					callback(err, result)
 				})
 			},
 			function(callback) {
 				getSummary( req.user.site_id, function(err, result ) {
+					eyes.inspect(result, "summary")
 					callback(err, result)
 				})
 			},

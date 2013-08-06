@@ -2,7 +2,256 @@
 	
 	<%- partial('site.ejs', {site: site})%>
 	
-	<h4>DRG: <%= drg %></h4>
-	<h4>SubPopulation: <%= subpop %></h4>
+	<h4>DRG: <%= drg.name %></h4>
+	<% if(drg.description) {%>
+	<%= drg.description %>
+	<%}%>
 	
+	<h4>SubPopulation: <%= subpop.name %></h4>
+	<hr/>
+	
+		
+	<table>
+		<tr>
+			<td><div id="container1" style="height: 600px; min-width: 600px"></div></td>
+			<td><div id="container2" style="height: 600px; min-width: 600px"></div></td>
+		</tr>
+		<tr>
+			<td><div id="container3" style="height: 600px; min-width: 600px"></div></td>
+			<td><div id="container4" style="height: 600px; min-width: 600px"></div></td>
+		</tr>
+	</table>
 </div>
+
+<script src="/js/Highstock-1.3.4/js/highstock.js"></script>
+<script src="/js/Highstock-1.3.4/js/modules/exporting.js"></script>
+	
+<script type="text/javascript">
+
+var graphs 	= [{}, {}, {}, {}]; // four graphs on page
+var names	= ['Ctrl Group 1', 'Ctrl Group 2', 'Ctrl Group 3', 'Current Measure'];
+var colors 	= Highcharts.getOptions().colors;
+	
+function GraphMeasure(index, measure, callback ) {
+	var g 				= graphs[index];
+	
+	g.seriesOptions 	= [];
+	//g.yAxisOptions 	= [];
+	//g.seriesCounter 	= 0;
+		
+	var query = '<%= host %>/site/sdsm?site=<%= site.id %>&drg='+ <%= drg.id %> 
+		query += '&subpop='+ <%= subpop.id %> +'&measure='+  measure.measure_id
+		
+		$.ajax({
+			type: 'GET',
+			url: query,
+			//dataType: 'jsonp',
+			async: false 
+		})
+		.success( function(data) {
+			console.log('succeeded...');
+			var type = 'line';
+			//if( i == 0) type='column';
+
+			for( var i in data ) {
+				g.seriesOptions[i] = {
+					name: names[i],
+					data: data[i].data,
+					type: type,
+					yAxis: 0
+				};
+			}
+
+			// As we're loading the data asynchronously, we don't know what order it will arrive. So
+			// we keep a counter and create the chart when all the data is loaded.
+			//g.seriesCounter++;
+
+			//if (g.seriesCounter == sites.length) {
+			createChart( callback );
+				//if( callback ) callback(null);
+			//} else {
+				//alert("counter:"+g.seriesCounter+"/"+sites.length);
+			//}
+		})
+		.fail(function(jqxhr, textStatus, error ) { 
+			var err = textStatus + ', ' + error;
+			console.log( "Request Failed: " + err);
+		});
+	
+
+	// create the chart when all data is loaded
+	function createChart(callback) {
+		//alert("createChart:"+index+ " measure:"+ measure.name);
+		var container_index = index+1
+		var container 		= 'container'+container_index;
+		console.log('createChart in container:'+container);
+		
+		$('#'+container).highcharts('StockChart', {
+			chart: {
+				renderTo: container,
+				alignTicks: true,
+				borderWidth: 0,
+				height: 600,
+				resetZoomButton: {
+					position: {
+						align: 'right',
+						verticalAlign: 'top'
+					}
+				},
+				shadow: true,
+				spacingTop: 10,
+				spacingRight: 20,
+				spacingBottom: 50,
+				spacingLeft: 20,
+				width: 600,
+				zoomType: 'x'
+			},
+
+			rangeSelector: {
+				buttons: [
+				{
+					type: 'month',
+					count: 3,
+					text: '1q'
+				},
+				{
+					type: 'year',
+					count: 1,
+					text: '1y'
+				}, {
+					type: 'all',
+					text: 'All'
+				}],
+				selected: 2
+			},
+			subtitle: {
+				align: 'center',
+				text: measure.description,
+				style: {
+					fontSize: '9px',
+					width: '200px'
+				},
+				verticalAlign: 'bottom'
+			},
+			title: {
+				text: measure.name
+			},
+			legend: {
+					align: 'center',
+					enabled: true,
+					itemStyle: {
+						fontSize: '9px',
+						width: '175px'
+					},
+					layout: 'horizontal',
+					verticalAlign: 'bottom'
+			},
+			credits: {
+				enabled: false
+			},
+			xAxis: {
+				alternateGridColor: '#FAFAFA',
+				labels: {
+					style: {
+						fontSize: '9px',
+						width: '175px'
+					},
+					formatter: function () {
+						var s = "",
+						d = new Date(this.value),
+						q = Math.floor((d.getMonth() + 3) / 3); //get quarter
+						s = "Q" + q + " " + d.getFullYear();
+						return s;
+					}
+				},
+				tickPositioner: function (min, max) {
+					var axis = this.axis,
+					act = min,
+					ticks = [];
+					while (act < max) {
+						ticks.push(act);
+						act = act + (90 * 24 * 3600 * 1000);
+					}
+					return ticks;
+				},
+				type: 'datetime'
+			},
+			yAxis: {
+				labels: {
+					formatter: function() {
+						return this.value;
+					}
+				},
+				plotLines: [{
+					value: 0,
+					width: 2,
+					color: 'silver'
+		    	}],
+				title: {
+					text: measure.units
+				}
+			},
+			tooltip: {
+				formatter: function () {
+					var s = '<b>';
+					if (Highcharts.dateFormat('%b', this.x) == 'Jan') {
+						s = s + "Q1"
+					};
+					if (Highcharts.dateFormat('%b', this.x) == 'Apr') {
+						s = s + "Q2"
+					};
+					if (Highcharts.dateFormat('%b', this.x) == 'Jul') {
+						s = s + "Q3"
+					};
+					if (Highcharts.dateFormat('%b', this.x) == 'Oct') {
+						s = s + "Q4"
+					};
+					s = s + " " + Highcharts.dateFormat('%Y', this.x) + '</b>';
+					$.each(this.points, function (i, point) {
+						s += '<br/>' + point.series.name + ': ';
+						s += Highcharts.numberFormat(point.y, 0, ',');
+					});
+					return s;
+				},
+				shared: true
+			},
+
+			series: g.seriesOptions
+		});
+		// done
+		if( callback) { callback(null); }
+	}
+};
+	
+$(function() {
+	var measures = <%- JSON.stringify(measures) %>
+	//$.each(measures, function(i, measure) {
+		//alert(measure.name);
+	//	setTimeout( function() {
+	//		GraphMeasure(i, measure);			
+	//	}, 1000);
+	//})
+
+
+	console.log("Start graph0")
+	GraphMeasure(0, measures[0], function(err) {
+		console.log("done graph0");
+	});
+	
+	console.log("Start graph1")
+	GraphMeasure(1, measures[1], function(err) {
+		console.log("done graph1");
+	});
+	
+	console.log("Start graph2")
+	GraphMeasure(2, measures[2], function(err) {
+		console.log("done graph2");
+	});
+	
+	console.log("Start graph3")
+	GraphMeasure(3, measures[3], function(err) {
+		console.log("done graph3");
+	});
+})
+	
+</script>

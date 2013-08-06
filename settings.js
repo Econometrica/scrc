@@ -136,7 +136,7 @@ function bootApplication(app) {
 	  function(username, password, done) {
 	    // asynchronous verification, for effect...
 	    process.nextTick(function () {
-
+			console.log("Basic Strategy:", username)
 	      // Find the user by username. If there is no user with the given
 	      // username, or the password is not correct, set the user to `false` to
 	      // indicate failure. Otherwise, return the authenticated `user`.
@@ -150,8 +150,19 @@ function bootApplication(app) {
 	  }
 	));
 
+	passport.serializeUser(function(user, done) {
+	  done(null, user);
+	});
+	
+	passport.deserializeUser(function(id, done) {
+		console.log('deserialize:', id)
+		//app.client.query('SELECT * FROM users where id='+id, function(err, user) {
+	  	    done(null, id);
+	  	//});
+	});
 	
 	app.use(passport.initialize());
+	app.use(passport.session());
 	// routes should be at the last
 	app.use(app.router)
 	

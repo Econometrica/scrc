@@ -12,6 +12,7 @@ var express 		= require('express'),
 	home			= require('./app/controllers/home'),
 	login			= require('./app/controllers/login'),
 	aspect			= require('./app/controllers/aspect'),
+	generator		= require('./app/controllers/generator'),
 	test			= require('./app/controllers/test');
 
 		
@@ -72,8 +73,10 @@ app.get('/sites.geojson',						passport.authenticate('basic', { session: false }
 app.get('/site/transitions/:id',				passport.authenticate('basic', { session: false }), aspect.transitions);
 app.get('/site/measures/:id',					passport.authenticate('basic', { session: false }), aspect.measures);
 app.get('/site/measure/:id',					passport.authenticate('basic', { session: false }), aspect.measure);
+app.get('/site/measure/:mid/:sid',				passport.authenticate('basic', { session: false }), aspect.site_measure);
 app.get('/site/drgs/:id',						passport.authenticate('basic', { session: false }), aspect.drgs);
 app.post('/site/drg',							passport.authenticate('basic', { session: false }), aspect.drg);
+app.get('/site/sdsm',							passport.authenticate('basic', { session: false }), aspect.sdsm);
 
 app.get('/contact', 							home.contact);
 app.get('/about', 								home.about);
@@ -81,6 +84,7 @@ app.get('/about', 								home.about);
 app.get('/login', 								login.index);
 app.get('/logout', 								login.logout);
 
+app.get('/generator',							generator.index);
 app.get('/test',								test.index);
 
 

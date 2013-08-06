@@ -2,6 +2,168 @@
 	
 	<%- partial('site.ejs', {site: site})%>
 	
-	<h4><%= JSON.stringify(measure) %></h4>
+	<div id="container" style="height: 500px; min-width: 900px"></div>
 	
-</div>
+	<br/>
+</div>	
+	
+<script src="/js/Highstock-1.3.4/js/highstock.js"></script>
+<script src="/js/Highstock-1.3.4/js/modules/exporting.js"></script>
+	
+<script type="text/javascript">
+	
+$(function() {
+		var seriesOptions 	= [],
+			yAxisOptions 	= [],
+			seriesCounter 	= 0,
+			names			= ['Ctrl Group 1', 'Ctrl Group 2', 'Ctrl Group 3', 'Current Measure']
+			sites 			= [ <%= site.id %>,1, 2, 3],
+			colors 			= Highcharts.getOptions().colors;
+			
+		$.each(sites, function(i, name) {
+			$.getJSON('http://localhost:7464/site/measure/'+ <%= measure.id %> +'/'+ name, function(data) {
+					var type = 'line';
+					if( i == 0) type='column';
+					seriesOptions[i] = {
+					name: names[i],
+					data: data,
+					type: type,
+					yAxis: 0
+				};
+
+				// As we're loading the data asynchronously, we don't know what order it will arrive. So
+				// we keep a counter and create the chart when all the data is loaded.
+				seriesCounter++;
+
+				if (seriesCounter == sites.length) {
+					createChart();
+				}
+			});
+		});	
+
+		// create the chart when all data is loaded
+		function createChart() {
+
+			$('#container').highcharts('StockChart', {
+				chart: {
+					alignTicks: true,
+					borderWidth: 0,
+					height: 500,
+					resetZoomButton: {
+						position: {
+							align: 'right',
+							verticalAlign: 'top'
+						}
+					},
+					shadow: true,
+					spacingTop: 10,
+					spacingRight: 20,
+					spacingBottom: 50,
+					spacingLeft: 20,
+					width: 765,
+					zoomType: 'x'
+				},
+
+				rangeSelector: {
+					selected: 4
+				},
+				subtitle: {
+					align: 'center',
+					text: '<%= measure.description %>',
+					style: {
+						fontSize: '9px',
+						width: '550px'
+					},
+					verticalAlign: 'bottom'
+				},
+				title: {
+					text: '<%= measure.name %>'
+				},
+				legend: {
+						align: 'center',
+						enabled: true,
+						itemStyle: {
+							fontSize: '9px',
+							width: '175px'
+						},
+						layout: 'horizontal',
+						verticalAlign: 'bottom'
+				},
+				credits: {
+					enabled: false
+				},
+				xAxis: {
+					alternateGridColor: '#FAFAFA',
+					labels: {
+						style: {
+							fontSize: '9px',
+							width: '175px'
+						},
+						formatter: function () {
+							var s = "",
+							d = new Date(this.value),
+							q = Math.floor((d.getMonth() + 3) / 3); //get quarter
+							s = "Q" + q + " " + d.getFullYear();
+							return s;
+						}
+					},
+					tickPositioner: function (min, max) {
+						var axis = this.axis,
+						act = min,
+						ticks = [];
+						while (act < max) {
+							ticks.push(act);
+							act = act + (90 * 24 * 3600 * 1000);
+						}
+						return ticks;
+					},
+					type: 'datetime'
+				},
+				yAxis: {
+					labels: {
+						formatter: function() {
+							return this.value;
+						}
+					},
+					plotLines: [{
+						value: 0,
+						width: 2,
+						color: 'silver'
+			    	}],
+					title: {
+						text: '<%= measure.units %>'
+					}
+				},
+
+			
+				tooltip: {
+					formatter: function () {
+						var s = '<b>';
+						if (Highcharts.dateFormat('%b', this.x) == 'Jan') {
+							s = s + "Q1"
+						};
+						if (Highcharts.dateFormat('%b', this.x) == 'Apr') {
+							s = s + "Q2"
+						};
+						if (Highcharts.dateFormat('%b', this.x) == 'Jul') {
+							s = s + "Q3"
+						};
+						if (Highcharts.dateFormat('%b', this.x) == 'Oct') {
+							s = s + "Q4"
+						};
+						s = s + " " + Highcharts.dateFormat('%Y', this.x) + '</b>';
+						$.each(this.points, function (i, point) {
+							s += '<br/>' + point.series.name + ': ';
+							s += Highcharts.numberFormat(point.y, 0, ',');
+						});
+						return s;
+					},
+					shared: true
+				},
+
+				series: seriesOptions
+			});
+		}
+
+	});
+</script>
