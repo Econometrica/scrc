@@ -12,7 +12,7 @@
  Target Server Version : 90001
  File Encoding         : utf-8
 
- Date: 08/05/2013 17:03:40 PM
+ Date: 08/06/2013 13:20:25 PM
 */
 
 -- ----------------------------
@@ -143,7 +143,7 @@ ALTER TABLE "quick_statistics" OWNER TO "postgres";
 -- ----------------------------
 DROP TABLE IF EXISTS "data";
 CREATE TABLE "data" (
-	"id" int8 NOT NULL,
+	"id" int4 NOT NULL,
 	"site_id" int4 NOT NULL,
 	"drg_id" int4 NOT NULL,
 	"subpopulation_id" int4 NOT NULL,
@@ -151,10 +151,10 @@ CREATE TABLE "data" (
 	"year" int4 NOT NULL DEFAULT 2013,
 	"quarter" int4 NOT NULL DEFAULT 1,
 	"value" float4 NOT NULL,
-	"upper_bound" float4,
-	"lower_bound" float4,
-	"episode_id" int4,
-	"department_id" int4
+	"upper_bound" float4 NOT NULL,
+	"lower_bound" float4 NOT NULL,
+	"episode_id" int4 NOT NULL,
+	"department_id" int4 NOT NULL
 )
 WITH (OIDS=FALSE);
 ALTER TABLE "data" OWNER TO "postgres";
@@ -190,6 +190,12 @@ CREATE VIEW "by_drg_statistics" AS SELECT drg.id, drg.measure_id, m.name, m.doma
 -- ----------------------------
 DROP VIEW IF EXISTS "by_site_id_drg_id_subpopulation_year_quarter";
 CREATE VIEW "by_site_id_drg_id_subpopulation_year_quarter" AS SELECT data.site_id, data.drg_id, data.subpopulation_id, data.measure_id, data.year, data.quarter, sum(data.value) AS total_value FROM data GROUP BY data.site_id, data.drg_id, data.subpopulation_id, data.measure_id, data.year, data.quarter ORDER BY data.site_id, data.drg_id, data.subpopulation_id, data.measure_id, data.year, data.quarter;
+
+-- ----------------------------
+--  View structure for years
+-- ----------------------------
+DROP VIEW IF EXISTS "years";
+CREATE VIEW "years" AS SELECT DISTINCT data.year FROM data ORDER BY data.year;
 
 -- ----------------------------
 --  View structure for pg_all_foreign_keys

@@ -1,0 +1,33 @@
+<div class='container'>
+	<%- partial('site.ejs', {site: site})%>
+
+	<h3>Benchmark Chart</h3>
+	
+	<h4>DRG: <%= drg.name %></h4>
+	<% if(drg.description) {%>
+	<%= drg.description %>
+	<%}%>
+
+	<div class='well'>
+		<h4>Period: <%= year %> Q<%= quarter %></h4>
+	</div>
+		
+	<hr/>
+	
+	<table>
+		<tr>
+			<td><%= data[0].name %><div id="container1" style="height: 600px; min-width: 600px"></div></td>
+			<td><%= data[1].name %><div id="container2" style="height: 600px; min-width: 600px"></div></td>
+		</tr>
+		<tr>
+			<td><%= data[2].name %><div id="container3" style="height: 600px; min-width: 600px"></div></td>
+			<td><%= data[3].name %><div id="container4" style="height: 600px; min-width: 600px"></div></td>
+		</tr>
+	</table>
+</div>
+
+<script src="/js/Highstock-1.3.4/js/highstock.js"></script>
+<script src="/js/Highstock-1.3.4/js/modules/exporting.js"></script>
+	
+<script type="text/javascript">
+</script>

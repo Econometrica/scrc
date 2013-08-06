@@ -4,6 +4,17 @@ var util	= require('util'),
 	fs		= require('fs');
 
 //
+// Retrieve all distinct years in data set
+//
+function getYears( fn ) {
+	var query = "SELECT * from years"
+	console.log(query) 
+	app.client.query(query, function(err, result) {
+		fn(err, result.rows)
+	})
+}
+
+//
 // Retrieve specific site for id
 //
 function getSite( id, fn ) {
@@ -378,6 +389,88 @@ module.exports = {
 					site: 			results[0],
 					drgs: 			results[1],
 					subpopulations: results[2],
+				});	
+		})
+	},
+	
+	// Benchmark selection form
+	benchmarks:  function(req,res) {
+		var id 		= req.params['id']
+		var user 	= req.user
+		console.log('benchmarks', id)
+		
+		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
+		
+		async.parallel([
+			function(callback) {
+				getSite(id, function(err, result ) {					
+					callback(null, result)
+				})
+			},
+			function(callback) {
+				getYears( function(err, result ) {	
+					eyes.inspect(result, "years")				
+					callback(null, result)
+				})
+			},
+			function(callback) {
+				getDrgs( function(err, result ) {					
+					callback(null, result)
+				})
+			}
+		], function(err, results) {
+			res.render( 'aspect/benchmarks.ejs', 
+				{	layout: 	'layout.ejs', 
+					site: 		results[0],
+					years: 		results[1],
+					drgs: 		results[2],
+					user: 		user,
+				});	
+		})
+	},
+	
+	// Specific Benchmark rendering
+	benchmark:  function(req,res) {
+		var id 		= req.body['site']
+		var drg 	= req.body['drg']
+		var year 	= req.body['year']
+		var quarter	= req.body['quarter']
+		var user 	= req.user
+		
+		eyes.inspect(req.body, "body")
+		
+		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
+		
+		var arr		= drg.split(' ')
+		var drg_id	= arr[0]
+		
+		console.log("benchmark", id, drg, year, quarter, drg_id)
+		 
+		async.parallel([
+			function(callback) {
+				getSite(id, function(err, result ) {					
+					callback(null, result)
+				})
+			},
+			function(callback) {
+				getDrg(drg_id, function(err, result ) {					
+					callback(null, result)
+				})
+			},
+			function(callback) {
+				getSelectedDrgMeasures( function(err, result ) {
+					callback(null, result)
+				})
+			}
+		], function(err, results) {
+			res.render( 'aspect/benchmark.ejs', 
+				{	layout: 	'layout.ejs', 
+					site: 		results[0],
+					drg: 		results[1],
+					data: 		results[2],
+					year: 		year,
+					quarter: 	quarter,
+					user: 		user
 				});	
 		})
 	}

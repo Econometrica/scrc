@@ -77,6 +77,8 @@ app.get('/site/measure/:mid/:sid',				passport.authenticate('basic', { session: 
 app.get('/site/drgs/:id',						passport.authenticate('basic', { session: false }), aspect.drgs);
 app.post('/site/drg',							passport.authenticate('basic', { session: false }), aspect.drg);
 app.get('/site/sdsm',							passport.authenticate('basic', { session: false }), aspect.sdsm);
+app.get('/site/benchmarks/:id',					passport.authenticate('basic', { session: false }), aspect.benchmarks);
+app.post('/site/benchmark',						passport.authenticate('basic', { session: false }), aspect.benchmark);
 
 app.get('/contact', 							home.contact);
 app.get('/about', 								home.about);

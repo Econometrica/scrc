@@ -25,8 +25,9 @@ var map = L.mapbox.map('map', 'examples.map-20v6611k')
 								"<tr>"+feature.properties.address+"</tr>" +
 								"<tr><a href='"+feature.properties.website+"'>website</a></tr></table></td></tr></table><hr/>" +
 								"<a href='site/transitions/" + feature.properties.id + "'>Transitions of Care</a><br/>" +
-								"<a href='site/measures/" + feature.properties.id + "'>Measures</a><br/>" +
-								"<a href='site/drgs/" + feature.properties.id + "'>DRG's</a><br/>";
+								"<a href='site/measures/" + feature.properties.id + "'>Measures Run Charts</a><br/>" +
+								"<a href='site/drgs/" + feature.properties.id + "'>DRGs Run Charts</a><br/>" +
+								"<a href='site/benchmarks/" + feature.properties.id + "'>DRGs Benchmark Charts</a><br/>";
 								
 			
 		    marker.bindPopup(popupContent,{
