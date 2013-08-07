@@ -7,7 +7,9 @@
 
 	<%- partial('site.ejs', {site: site})%>
 
-
+	<div id="dialog" title="Quick Statistics" data-toggle="popover" data-content="And here's some amazing content. It's very engaging. right?">
+	</div>
+	
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
 		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="17in" height="11in" viewBox="0 0 1224 792"
 		xml:space="preserve" color-interpolation-filters="sRGB" class="st20">
@@ -93,10 +95,13 @@
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="756" width="81" height="72"/>
-			<rect x="0" y="720" width="81" height="72" class="st3"
+			
+			<rect title='Hospital Emergency Department' x="0" y="720" width="81" height="72" class="st3"
 				onmouseover="evt.target.setAttribute('class', 'st7');"
 				onmouseout="evt.target.setAttribute('class', 'st3');"
+				onclick="QuickStats(10, 1);"
 			/>
+			
 			<text x="19.76" y="745.2" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Hospital <tspan
 						x="12.62" dy="1.2em" class="st5">Emergency </tspan><tspan x="10.19" dy="1.2em" class="st5">Department</tspan></text>		</g>
 						
@@ -629,4 +634,12 @@
 	</g>
 </svg>
 </body>
+<script>
+function QuickStats(site, dept) {
+	// fill the div
+	var str = "<p>Stats for Hospital Emergency Dept:" + dept +"</p>";
+	$('#dialog').html(str);
+	$('#dialog').popover('show');
+}
+</script>
 </html>

@@ -13,7 +13,61 @@ function getYears( fn ) {
 		fn(err, result.rows)
 	})
 }
+//
+// Retrieve all quick measures for transitional care
+//
+function getQuickMeasures( fn ) {
+	var query = "SELECT * from joined_quick_statistics"
+	console.log(query) 
+	app.client.query(query, function(err, result) {
+		eyes.inspect(result, "getQuickMeasures")
+		fn(err, result.rows)
+	})
+}
 
+//
+// Get Quick Statistics for Particular Site and Department
+// and generate the quick stats
+//
+function getQuickStatsData(site_id, dept_id, measures, fn ) {
+	var query = "SELECT * from transitional_care_data where site_id="+site_id+" and department_id="+dept_id
+	console.log(query) 
+	app.client.query(query, function(err, results) {
+		var result			= results.rows
+		var data 			= []
+		var measure_id 		= 0
+		
+		function findMeasure(id) {
+			for(var m in measures ) {
+				if( measures[m].id == id ) return measures[m]
+			}
+			console.log("measure:", id, "not found")
+			return null;
+		}
+		
+		for( var r in result ) {
+			var elt  = result[r]
+			var next = parseInt(r)+1
+			if( elt.measure_id != measure_id ) {
+				var measure = findMeasure(elt.measure_id)
+				//eyes.inspect(measure, "measure")
+				var d = {
+					site_id: 	site_id,
+					measure_id: elt.measure_id,
+					measure:    measure.name,
+					val: 		elt.value,
+					delta:      elt.value - result[next].value
+				}
+				eyes.inspect(d, "d")
+				
+				data.push(d)
+				measure_id = elt.measure_id
+			}
+		}
+		fn(err, data)
+	})
+}
+	
 //
 // Retrieve specific site for id
 //
@@ -87,7 +141,7 @@ function getSubpopulations( fn ) {
 }
 
 //
-// Retrieve subpopulation
+// Retrieve specific subpopulation
 //
 function getSubpopulation(id, fn ) {
 	var query = "SELECT * from subpopulations where id="+id
@@ -147,6 +201,7 @@ function getDomains( fn ) {
 }
 
 module.exports = {
+	// display transitions of care for particualr site
 	transitions: function(req, res) {
 		var id 		= req.params['id']
 		var user 	= req.user
@@ -156,6 +211,68 @@ module.exports = {
 		console.log('transitions', id)
 		getSite(id, function(err, result ) {
 			res.render( 'aspect/transitions.ejs', {layout: 'layout.ejs', site: result});	
+		})
+	},
+	
+	// get transitions of care for specific site and department
+	transitions_department: function(req, res) {
+		var site_id = req.params['site_id']
+		var dept_id = req.params['dept_id']
+		var user 	= req.user
+		
+		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
+		
+		console.log('transitions', site_id, dept_id)
+		async.parallel([
+			function(callback) {
+				getSite(site_id, function(err, result ) {
+					//eyes.inspect(result, "site")
+					callback( null, result);	
+				})
+			},
+			function(callback) {
+				getQuickMeasures(function(err, mresult ) {
+					var measures = mresult
+					async.parallel([
+						function(callback) {
+							getQuickStatsData(1, dept_id, measures, function(err, result ) {
+								callback( null, result);	
+							})
+						},
+						function(callback) {
+							getQuickStatsData(2, dept_id, measures, function(err, result ) {
+								callback( null, result);	
+							})
+						},
+						function(callback) {
+							getQuickStatsData(3, dept_id, measures, function(err, result ) {
+								callback( null, result);	
+							})
+						},
+						function(callback) {
+							getQuickStatsData(site_id, dept_id, measures, function(err, result ) {
+								callback( null, result);	
+							})
+						},
+					], function(err, results) {
+						console.log("merge ctrl values")
+						var ctrl1 	= results[0]
+						var ctrl2 	= results[1]
+						var ctrl3 	= results[2]
+						var measures	= results[3]
+						for( var m in measures ) {
+							measures[m].ctrl1 = ctrl1[m].val
+							measures[m].ctrl2 = ctrl2[m].val
+							measures[m].ctrl3 = ctrl3[m].val
+							eyes.inspect(measures[m], "measure")
+						}
+						callback( null, measures);	
+						
+					})
+				})
+			},
+		], function(err, results) {
+			res.send(results);
 		})
 	},
 

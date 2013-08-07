@@ -71,6 +71,8 @@ function restrict(req, res, next) {
 app.get('/', 									passport.authenticate('basic', { session: false }), home.index);
 app.get('/sites.geojson',						passport.authenticate('basic', { session: false }), home.sites);
 app.get('/site/transitions/:id',				passport.authenticate('basic', { session: false }), aspect.transitions);
+app.get('/site/transitions/:site_id/:dept_id',	passport.authenticate('basic', { session: false }), aspect.transitions_department);
+
 app.get('/site/measures/:id',					passport.authenticate('basic', { session: false }), aspect.measures);
 app.get('/site/measure/:id',					passport.authenticate('basic', { session: false }), aspect.measure);
 app.get('/site/measure/:mid/:sid',				passport.authenticate('basic', { session: false }), aspect.site_measure);
