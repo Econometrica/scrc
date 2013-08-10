@@ -20,7 +20,7 @@ function getQuickMeasures( fn ) {
 	var query = "SELECT * from joined_quick_statistics"
 	console.log(query) 
 	app.client.query(query, function(err, result) {
-		eyes.inspect(result, "getQuickMeasures")
+		//eyes.inspect(result, "getQuickMeasures")
 		fn(err, result.rows)
 	})
 }
@@ -58,13 +58,24 @@ function getQuickStatsData(site_id, dept_id, measures, fn ) {
 					val: 		elt.value,
 					delta:      elt.value - result[next].value
 				}
-				eyes.inspect(d, "d")
+				//eyes.inspect(d, "d")
 				
 				data.push(d)
 				measure_id = elt.measure_id
 			}
 		}
 		fn(err, data)
+	})
+}
+	
+//
+// Retrieve specific all sites
+//
+function getSites( fn ) {
+	var query = "SELECT * from sites"
+	console.log(query) 
+	app.client.query(query, function(err, result) {
+		fn(err, result.rows)
 	})
 }
 	
@@ -165,6 +176,22 @@ function get_sdsm( site_id, drg_id, subpop_id, measure_id, fn) {
 }
 
 
+function get_benchmark_sdsm( site_id, drg_id, subpop_id, measure_id, year, quarter, fn) {
+	var query = "SELECT site_id, episode_id, value from drgs_benchmark_data where "
+	query += " drg_id="+drg_id
+	query += " and subpopulation_id="+subpop_id
+	query += " and measure_id="+measure_id
+	query += " and year="+ year
+	query += " and quarter="+quarter
+	query += " order by site_id, episode_id"
+	
+	console.log(query) 
+	app.client.query(query, function(err, result) {
+		console.log("err:"+err)
+		fn(err, result.rows)
+	})
+}
+
 //
 // Retrieve specific measure for site_id and control groups
 //
@@ -218,64 +245,57 @@ module.exports = {
 	transitions_department: function(req, res) {
 		var site_id = req.params['site_id']
 		var dept_id = req.params['dept_id']
-		var user 	= req.user
+		//var user 	= req.user
 		
-		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
+		//if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
-		console.log('transitions', site_id, dept_id)
-		async.parallel([
-			function(callback) {
-				getSite(site_id, function(err, result ) {
-					//eyes.inspect(result, "site")
-					callback( null, result);	
+		console.log('dept transitions of care, site:', site_id, 'dept:', dept_id)
+		
+		try {
+			getQuickMeasures(function(err, mresult ) {
+				var measures = mresult
+				async.parallel([
+					function(callback) {
+						getQuickStatsData(1, dept_id, measures, function(err, result ) {
+							callback( null, result);	
+						})
+					},
+					function(callback) {
+						getQuickStatsData(2, dept_id, measures, function(err, result ) {
+							callback( null, result);	
+						})
+					},
+					function(callback) {
+						getQuickStatsData(3, dept_id, measures, function(err, result ) {
+							callback( null, result);	
+						})
+					},
+					function(callback) {
+						getQuickStatsData(site_id, dept_id, measures, function(err, result ) {
+							callback( null, result);	
+						})
+					},
+				], function(err, results) {
+					console.log("merge ctrl values:", err)
+					var ctrl1 		= results[0]
+					var ctrl2 		= results[1]
+					var ctrl3		= results[2]
+					var measures	= results[3]
+					
+					for( var m in measures ) {
+						measures[m].ctrl1 = ctrl1[m].val
+						measures[m].ctrl2 = ctrl2[m].val
+						measures[m].ctrl3 = ctrl3[m].val
+					}
+					//eyes.inspect(measures, "measures")
+					console.log("merge done")
+					res.send(measures);
 				})
-			},
-			function(callback) {
-				getQuickMeasures(function(err, mresult ) {
-					var measures = mresult
-					async.parallel([
-						function(callback) {
-							getQuickStatsData(1, dept_id, measures, function(err, result ) {
-								callback( null, result);	
-							})
-						},
-						function(callback) {
-							getQuickStatsData(2, dept_id, measures, function(err, result ) {
-								callback( null, result);	
-							})
-						},
-						function(callback) {
-							getQuickStatsData(3, dept_id, measures, function(err, result ) {
-								callback( null, result);	
-							})
-						},
-						function(callback) {
-							getQuickStatsData(site_id, dept_id, measures, function(err, result ) {
-								callback( null, result);	
-							})
-						},
-					], function(err, results) {
-						console.log("merge ctrl values")
-						var ctrl1 	= results[0]
-						var ctrl2 	= results[1]
-						var ctrl3 	= results[2]
-						var measures	= results[3]
-						for( var m in measures ) {
-							measures[m].ctrl1 = ctrl1[m].val
-							measures[m].ctrl2 = ctrl2[m].val
-							measures[m].ctrl3 = ctrl3[m].val
-							eyes.inspect(measures[m], "measure")
-						}
-						callback( null, measures);	
-						
-					})
-				})
-			},
-		], function(err, results) {
-			res.send(results);
-		})
+			})
+		} catch(err) {
+			console.log('getQuickMeasures exception:', err)
+		}
 	},
-
 	//
 	// generates JSON data for that site and that measure
 	//
@@ -367,8 +387,10 @@ module.exports = {
 		var s_id	= req.query['site']
 		var user 	= req.user
 
-		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
-
+		if( user.site_id != 0 && user.site_id != s_id ) {
+			return res.send('Sorry!!! UnAuthorized')
+		}
+		
 		console.log('measure ', m_id, ' for site:', s_id, ' user site:', user.site_id)
 		
 		async.parallel([
@@ -466,7 +488,7 @@ module.exports = {
 		], function(err, results) {
 			res.render( 'aspect/drg.ejs', 
 				{	layout: 'layout.ejs', 
-					host: 		"http://localhost:7464",
+					host: 		"http://"+ req.headers['host'],
 					site: 		results[0],
 					subpop:		results[1],
 					drg: 		results[2],
@@ -534,15 +556,55 @@ module.exports = {
 				getDrgs( function(err, result ) {					
 					callback(null, result)
 				})
+			},
+			function(callback) {
+				getSubpopulations( function(err, result ) {					
+					callback(null, result)
+				})
 			}
 		], function(err, results) {
 			res.render( 'aspect/benchmarks.ejs', 
-				{	layout: 	'layout.ejs', 
-					site: 		results[0],
-					years: 		results[1],
-					drgs: 		results[2],
-					user: 		user,
+				{	layout: 		'layout.ejs', 
+					site: 			results[0],
+					years: 			results[1],
+					drgs: 			results[2],
+					subpopulations: results[3],
+					user: 			user,
 				});	
+		})
+	},
+	
+	// ajax support
+	benchmark_sdmp: function(req, res) {
+		var site_id = req.params['site_id']
+		var drg_id 	= req.params['drg_id']
+		var m_id	= req.params['m_id']
+		var pop_id 	= req.params['pop_id']
+		var year 	= req.params['year']
+		var quarter = req.params['quarter']
+		
+		console.log( "benchmark_sdmp", site_id, "drg:",drg_id, "measure:",m_id, "subpop:", pop_id, year, quarter)
+		
+		function reformat( results ) {
+			var series = [ 
+							{ episode_id: 1, name:'Pre-Episode', data:[]},
+							{ episode_id: 2, name:'Current Episode', data:[]},
+							{ episode_id: 3, name:'Post-Episode', data:[]}
+			 ]
+		
+			for( var i in results ) {
+				var r = results[i]
+				var serie = series[r.episode_id-1]
+				serie.data.push( r.value )
+			}
+			return series
+		}
+		
+		get_benchmark_sdsm( site_id, drg_id, pop_id, m_id, year, quarter, function(err, results) {
+			// reformat
+			var data = reformat(results)
+			//eyes.inspect(data)
+			res.send( data )
 		})
 	},
 	
@@ -552,9 +614,11 @@ module.exports = {
 		var drg 	= req.body['drg']
 		var year 	= req.body['year']
 		var quarter	= req.body['quarter']
+		var subpop	= req.body['subpop']
 		var user 	= req.user
 		
-		eyes.inspect(req.body, "body")
+		//eyes.inspect(req.body, "body")
+		//eyes.inspect(req.headers, "headers")
 		
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
@@ -578,16 +642,42 @@ module.exports = {
 				getSelectedDrgMeasures( function(err, result ) {
 					callback(null, result)
 				})
+			},
+			function(callback) {
+				getSubpopulation( subpop, function(err, result ) {
+					callback(null, result)
+				})
+			},
+			function(callback) {
+				getSites( function(err, result ) {
+					// if user is not CMS, we need to obfuscte the site names
+					//eyes.inspect(user, "user site check");
+					if( user.site_id != 0 ) {
+						for( var s in result ) {
+							if( result[s].id > 9 )  {	// Control Groups
+								if( result[s].id != user.site_id ) {
+									result[s].name = 'site '+result[s].id;
+									//console.log("Obfuscate ", result[s].id, " to ", result[s].name)
+								}
+							}
+						}
+					}
+					//eyes.inspect(result, "sites")
+					callback(null, result)
+				})
 			}
 		], function(err, results) {
 			res.render( 'aspect/benchmark.ejs', 
-				{	layout: 	'layout.ejs', 
-					site: 		results[0],
-					drg: 		results[1],
-					data: 		results[2],
-					year: 		year,
-					quarter: 	quarter,
-					user: 		user
+				{	layout: 		'layout.ejs', 
+					site: 			results[0],
+					drg: 			results[1],
+					measures: 		results[2],
+					subpopulation: 	results[3],
+					sites:  		results[4],
+					host: 			"http://" + req.headers['host'],
+					year: 			year,
+					quarter: 		quarter,
+					user: 			user,
 				});	
 		})
 	}

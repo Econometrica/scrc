@@ -73,12 +73,18 @@ app.get('/sites.geojson',						passport.authenticate('basic', { session: false }
 app.get('/site/transitions/:id',				passport.authenticate('basic', { session: false }), aspect.transitions);
 app.get('/site/transitions/:site_id/:dept_id',	passport.authenticate('basic', { session: false }), aspect.transitions_department);
 
+//app.get('/site/transitions/:site_id/:dept_id',	aspect.transitions_department);
+
 app.get('/site/measures/:id',					passport.authenticate('basic', { session: false }), aspect.measures);
 app.get('/site/measure/:id',					passport.authenticate('basic', { session: false }), aspect.measure);
 app.get('/site/measure/:mid/:sid',				passport.authenticate('basic', { session: false }), aspect.site_measure);
 app.get('/site/drgs/:id',						passport.authenticate('basic', { session: false }), aspect.drgs);
 app.post('/site/drg',							passport.authenticate('basic', { session: false }), aspect.drg);
 app.get('/site/sdsm',							passport.authenticate('basic', { session: false }), aspect.sdsm);
+
+app.get('/site/bsdmp/:site_id/:drg_id/:m_id/:pop_id/:year/:quarter',
+			passport.authenticate('basic', { session: false }), aspect.benchmark_sdmp);
+
 app.get('/site/benchmarks/:id',					passport.authenticate('basic', { session: false }), aspect.benchmarks);
 app.post('/site/benchmark',						passport.authenticate('basic', { session: false }), aspect.benchmark);
 

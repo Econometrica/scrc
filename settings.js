@@ -86,14 +86,16 @@ function bootApplication(app) {
 	var pg = require('pg'); 
 	var conString = "postgres://postgres:postgres@localhost:5432/scrc";
  	function pgConnect (callback) {
+		console.log("pgConnect...")
 		pg.connect(conString,
-		function (err, client) {
+		function (err, client, done) {
 			if (err) {
 				console.log(JSON.stringify(err));
 			}
 			if (client) {
 				callback(client);
 			}
+			done();
 		});
     };	
 		

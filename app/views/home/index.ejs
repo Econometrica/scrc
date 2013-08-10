@@ -13,6 +13,7 @@ var map = L.mapbox.map('map', 'examples.map-20v6611k')
     .setView([40, -74.5], 8);
 
 	var geojson = <%- JSON.stringify(geojson) %>
+	var user    = <%- JSON.stringify(user) %>
 	
 		// Set a custom icon on each marker based on feature properties
 		map.markerLayer.on('layeradd', function(e) {
@@ -23,12 +24,15 @@ var map = L.mapbox.map('map', 'examples.map-20v6611k')
 			var popupContent =  "<table><tr><td><img src='"+feature.properties.image+"' width='64' /></td>" +
 								'<td><table><tr><h4>' + feature.properties.title + '</h4></tr>' +
 								"<tr>"+feature.properties.address+"</tr>" +
-								"<tr><a href='"+feature.properties.website+"'>website</a></tr></table></td></tr></table><hr/>" +
+								"<tr><a href='"+feature.properties.website+"'>website</a></tr></table></td></tr></table>"
+								
+			if( user.site_id == 0 || user.site_id == feature.properties.id ) {
+				popupContent +=	"<hr/>" +
 								"<a href='site/transitions/" + feature.properties.id + "'>Transitions of Care</a><br/>" +
 								"<a href='site/measures/" + feature.properties.id + "'>Measures Run Charts</a><br/>" +
 								"<a href='site/drgs/" + feature.properties.id + "'>DRGs Run Charts</a><br/>" +
 								"<a href='site/benchmarks/" + feature.properties.id + "'>DRGs Benchmark Charts</a><br/>";
-								
+			}
 			
 		    marker.bindPopup(popupContent,{
 		        closeButton: false,

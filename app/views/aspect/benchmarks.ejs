@@ -6,14 +6,14 @@
 	<form id='drgForm' action='/site/benchmark' method='POST'>
 		<div class="ui-widget" style="width:600px">
 
-			<label for="subpop">Select Year: </label>
+			<label for="year">Select Year: </label>
 			<select class="selectpicker show-tick" id='year' name='year'>
 				<% for( var y in years) {%>
 		    		<option value='<%= years[y].year %>'><%= years[y].year %></option>
 		    	<% } %>
 			</select>
 
-			<label for="subpop">Select Quarter: </label>
+			<label for="quarter">Select Quarter: </label>
 			<select class="selectpicker show-tick" id='quarter' name='quarter'>
 		    	<option value='1'>Q1</option>
 		    	<option value='2'>Q2</option>
@@ -21,6 +21,13 @@
 		    	<option value='4'>Q4</option>
 			</select>
 
+			<label for="subpop">Enter Sub-Population: </label>
+			<select class="selectpicker show-tick" id='subpop' name='subpop'>
+				<% for( var s in subpopulations) {%>
+		    		<option value='<%= subpopulations[s].id %>'><%= subpopulations[s].name %></option>
+		    	<% } %>
+			</select>
+			
 			<label for="tags">Enter DRG code or text: </label>
 			<input id="tags" name='drg' style="width:600px" />
 			<input type='hidden' id='site' name='site' value='<%= site.id %>' /><br/>

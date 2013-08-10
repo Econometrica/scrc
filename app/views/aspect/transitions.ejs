@@ -2,14 +2,21 @@
 <html>
 <head>
 	<title><%= site.name %></title>
+	<style>
+		.text-right {
+			text-align: right !important;
+		}
+	</style>
 <head>	
 <body>
 
 	<%- partial('site.ejs', {site: site})%>
 
-	<div id="dialog" title="Quick Statistics" data-toggle="popover" data-content="And here's some amazing content. It's very engaging. right?">
+	<div class='container'>
+	<div class="well" id="dialog">
 	</div>
-	
+	</div>
+	</hr>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
 		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="17in" height="11in" viewBox="0 0 1224 792"
 		xml:space="preserve" color-interpolation-filters="sRGB" class="st20">
@@ -57,7 +64,7 @@
 			<use xlink:href="#lend5" transform="scale(-3.016,-3.016) "/>
 		</marker>
 	</defs>
-	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage" transform="scale(0.75)">
 		<v:userDefs>
 			<v:ud v:nameU="msvThemeOrder" v:val="VT0(0):26"/>
 		</v:userDefs>
@@ -88,7 +95,7 @@
 						
 		<g id="shape6-8" v:mID="6" v:groupContext="shape" transform="translate(254.25,-380.25)" >
 			
-			<title>Rectangle</title>
+			<title>Hospital Emergency Department</title>
 			<desc>Hospital Emergency Department</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
@@ -97,36 +104,41 @@
 			<v:textRect cx="40.5" cy="756" width="81" height="72"/>
 			
 			<rect title='Hospital Emergency Department' x="0" y="720" width="81" height="72" class="st3"
-				onmouseover="evt.target.setAttribute('class', 'st7');"
-				onmouseout="evt.target.setAttribute('class', 'st3');"
-				onclick="QuickStats(10, 1);"
+				onmouseover="QuickStats('Hospital Emergency Department', 1);"
 			/>
 			
 			<text x="19.76" y="745.2" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Hospital <tspan
 						x="12.62" dy="1.2em" class="st5">Emergency </tspan><tspan x="10.19" dy="1.2em" class="st5">Department</tspan></text>		</g>
 						
 		<g id="shape7-13" v:mID="7" v:groupContext="shape" transform="translate(252,-299.25)">
-			<title>Rectangle.7</title>
+			<title>Observation Care</title>
 			<desc>Observation Care</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="756" width="81" height="72"/>
-			<rect x="0" y="720" width="81" height="72" class="st3"/>
+			<rect x="0" y="720" width="81" height="72" class="st3"
+			onmouseover="QuickStats('Observation Care', 2);"
+			/>
+			
 			<text x="10.14" y="752.4" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Observation <tspan
 						x="28.75" dy="1.2em" class="st5">Care</tspan></text>		</g>
+		
 		<g id="shape8-17" v:mID="8" v:groupContext="shape" transform="translate(252,-216)">
-			<title>Rectangle.8</title>
+			<title>Outpatient Care</title>
 			<desc>Outpatient Care</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="756" width="81" height="72"/>
-			<rect x="0" y="720" width="81" height="72" class="st3"/>
+			<rect x="0" y="720" width="81" height="72" class="st3"
+			onmouseover="QuickStats('Outpatient Care', 3);"
+			/>
 			<text x="13.8" y="752.4" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Outpatient <tspan
 						x="28.75" dy="1.2em" class="st5">Care</tspan></text>		</g>
+		
 		<g id="shape9-21" v:mID="9" v:groupContext="shape" transform="translate(121.5,-132.75)">
 			<title>Rectangle.9</title>
 			<desc>No Additional Care (with or without Instruction)</desc>
@@ -139,16 +151,21 @@
 			<text x="6.74" y="738" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>No Additional <tspan
 						x="28.75" dy="1.2em" class="st5">Care<v:newlineChar/></tspan><tspan x="7.74" dy="1.2em" class="st5">(</tspan><tspan
 						class="st6">with or without </tspan><tspan x="16.24" dy="1.44em" class="st6">Instruction</tspan>)</text>		</g>
+		
 		<g id="shape34-28" v:mID="34" v:groupContext="shape" transform="translate(999,-213.75)">
-			<title>Rectangle.34</title>
+			<title>Readmissions</title>
 			<desc>Readmissions</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="72" cy="738" width="144" height="108"/>
-			<rect x="0" y="684" width="144" height="108" class="st3"/>
+			<rect x="0" y="684" width="144" height="108" class="st3"
+			onmouseover="QuickStats('Readmissions', 18);"
+			/>
 			<text x="36.44" y="741.6" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Readmissions</text>		</g>
+		
+		
 		<g id="shape105-31" v:mID="105" v:groupContext="shape" transform="translate(841.5,-29.25)">
 			<title>Rectangle.105</title>
 			<desc>Against Medical Advice</desc>
@@ -160,18 +177,22 @@
 			<rect x="0" y="742.5" width="81" height="49.5" class="st3"/>
 			<text x="21.91" y="756.45" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Against <tspan
 						x="20.56" dy="1.2em" class="st5">Medical </tspan><tspan x="24.06" dy="1.2em" class="st5">Advice</tspan></text>		</g>
+		
 		<g id="shape108-36" v:mID="108" v:groupContext="shape" transform="translate(1044,-18)">
-			<title>Rectangle.108</title>
+			<title>Death</title>
 			<desc>Death (absorbing state at any point of transition)</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="72" cy="748" width="144" height="88"/>
-			<rect x="0" y="704" width="144" height="88" class="st3"/>
+			<rect x="0" y="704" width="144" height="88" class="st3"
+			onmouseover="QuickStats('Death', 18);"
+			/>
 			<text x="56.74" y="730" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Death<v:newlineChar/><tspan
 						x="30.9" dy="1.2em" class="st5">(</tspan>absorbing state<v:newlineChar/><tspan x="35.85" dy="1.2em"
 						class="st5">at any point of <v:newlineChar/></tspan><tspan x="46.24" dy="1.2em" class="st5">transition</tspan>)</text>		</g>
+		
 		<g id="shape140-42" v:mID="140" v:groupContext="shape" transform="translate(18,963) scale(1,-1)">
 			<title>Side brace.140</title>
 			<v:userDefs>
@@ -288,6 +309,7 @@
 			<path d="M54 792 L108 756 L54 720 L0 756 L54 792 Z" class="st12"/>
 			<text x="25.88" y="745.2" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Decision of <tspan
 						x="23.52" dy="1.2em" class="st5">Subsequent       </tspan><tspan x="42.25" dy="1.2em" class="st5">Care</tspan></text>		</g>
+		
 		<g id="shape182-81" v:mID="182" v:groupContext="shape" transform="translate(378,-297)">
 			<title>Diamond.182</title>
 			<desc>Inpatient Admission Decisions</desc>
@@ -470,27 +492,35 @@
 			</v:userDefs>
 			<rect x="0" y="666" width="369" height="126" class="st16"/>
 		</g>
+		
 		<g id="shape101-218" v:mID="101" v:groupContext="shape" v:layerMember="3" transform="translate(841.5,-470.25)">
-			<title>Rectangle.38</title>
-			<desc>Skilled Nursing Agenct</desc>
+			<title>Skilled Nursing Agency</title>
+			<desc>Skilled Nursing Agency</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="767.25" width="81" height="49.5"/>
-			<rect x="0" y="742.5" width="81" height="49.5" class="st3"/>
+			<rect x="0" y="742.5" width="81" height="49.5" class="st3"
+			onmouseover="QuickStats('Skilled Nursing Agency', 8);"
+			/>
+			
 			<text x="23.59" y="756.45" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Skilled <tspan
-						x="20.97" dy="1.2em" class="st5">Nursing </tspan><tspan x="23.32" dy="1.2em" class="st5">Agenct</tspan></text>		</g>
+						x="20.97" dy="1.2em" class="st5">Nursing </tspan><tspan x="23.32" dy="1.2em" class="st5">Agency</tspan></text>		</g>
+		
 		<g id="shape102-223" v:mID="102" v:groupContext="shape" transform="translate(841.5,-414)">
-			<title>Rectangle.102</title>
+			<title>Hospice</title>
 			<desc>Hospice</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="767.25" width="81" height="49.5"/>
-			<rect x="0" y="742.5" width="81" height="49.5" class="st3"/>
+			<rect x="0" y="742.5" width="81" height="49.5" class="st3"
+			onmouseover="QuickStats('Hospice', 9);"
+			/>
 			<text x="20.24" y="770.85" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Hospice</text>		</g>
+
 		<g id="shape103-226" v:mID="103" v:groupContext="shape" transform="translate(841.5,-355.5)">
 			<title>Rectangle.103</title>
 			<desc>Long-term Care Hospital</desc>
@@ -499,32 +529,41 @@
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="767.25" width="81" height="49.5"/>
-			<rect x="0" y="742.5" width="81" height="49.5" class="st3"/>
+			<rect x="0" y="742.5" width="81" height="49.5" class="st3" 		
+				onmouseover="QuickStats('Long-term Care Hospital', 10);"
+			/>
 			<text x="14.92" y="763.65" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Long-term <tspan
 						x="6.52" dy="1.2em" class="st5">Care Hospital</tspan></text>		</g>
+		
 		<g id="shape104-230" v:mID="104" v:groupContext="shape" transform="translate(841.5,-297)">
-			<title>Rectangle.104</title>
+			<title>Inpatient Rehab Facility</title>
 			<desc>Inpatient Rehab Facility</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="767.25" width="81" height="49.5"/>
-			<rect x="0" y="742.5" width="81" height="49.5" class="st3"/>
+			<rect x="0" y="742.5" width="81" height="49.5" class="st3"
+			onmouseover="QuickStats('Inpatient Rehab Facility', 11);"
+			/>
 			<text x="17.93" y="763.65" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Inpatient <tspan
 						x="5.08" dy="1.2em" class="st5">Rehab Facility</tspan></text>		</g>
+		
 		<g id="shape253-234" v:mID="253" v:groupContext="shape" transform="translate(841.5,-83.25)">
-			<title>Rectangle.253</title>
+			<title>Home Without Home Health Agency</title>
 			<desc>Home Without Home Health Agency</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="756" width="81" height="72"/>
-			<rect x="0" y="720" width="81" height="72" class="st18"/>
+			<rect x="0" y="720" width="81" height="72" class="st18"
+			onmouseover="QuickStats('Home Without Home Health Agency', 14);"
+			/>
 			<text x="25.52" y="738" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Home <v:newlineChar/><tspan
 						x="20.92" dy="1.2em" class="st5">Without<v:newlineChar/></tspan><tspan x="7.4" dy="1.2em" class="st5">Home Health </tspan><tspan
 						x="22.68" dy="1.2em" class="st5">Agency</tspan></text>		</g>
+		
 		<g id="shape252-242" v:mID="252" v:groupContext="shape" transform="translate(841.5,-220.5)">
 			<title>Rectangle.252</title>
 			<desc>Home With Home Health Agency</desc>
@@ -533,21 +572,27 @@
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="758.25" width="81" height="67.5"/>
-			<rect x="0" y="724.5" width="81" height="67.5" class="st3"/>
+			<rect x="0" y="724.5" width="81" height="67.5" class="st3"
+			onmouseover="QuickStats('Home With Home Health Agency', 12);"
+			/>
 			<text x="25.52" y="740.25" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Home <v:newlineChar/><tspan
 						x="29.13" dy="1.2em" class="st5">With<v:newlineChar/></tspan><tspan x="7.4" dy="1.2em" class="st5">Home Health </tspan><tspan
 						x="22.68" dy="1.2em" class="st5">Agency</tspan></text>		</g>
+		
 		<g id="shape107-248" v:mID="107" v:groupContext="shape" transform="translate(841.5,-166.5)">
-			<title>Rectangle.107</title>
+			<title>Other Facility Discharge</title>
 			<desc>Other Facility Discharge</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="767.25" width="81" height="49.5"/>
-			<rect x="0" y="742.5" width="81" height="49.5" class="st3"/>
+			<rect x="0" y="742.5" width="81" height="49.5" class="st3"
+			onmouseover="QuickStats('Other Facility Discharge', 13);"
+			/>
 			<text x="7.54" y="763.65" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Other Facility <tspan
 						x="15.2" dy="1.2em" class="st5">Discharge</tspan></text>		</g>
+		
 		<g id="shape278-252" v:mID="278" v:groupContext="shape" v:layerMember="0" transform="translate(783,-327.375)">
 			<title>Dynamic connector.278</title>
 			<path d="M0 788.62 L13.5 788.62 L13.5 777.38 L29.84 777.38" class="st13"/>
@@ -556,70 +601,87 @@
 			<title>Dynamic connector.279</title>
 			<path d="M0 792 L13.5 792 L13.5 1068.75 L52.34 1068.75" class="st13"/>
 		</g>
+		
 		<g id="shape280-262" v:mID="280" v:groupContext="shape" transform="translate(841.5,-4.75)">
-			<title>Rectangle.280</title>
+			<title>Other</title>
 			<desc>Other</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="40.5" cy="782" width="81" height="20"/>
-			<rect x="0" y="772" width="81" height="20" class="st3"/>
+			<rect x="0" y="772" width="81" height="20" class="st3"
+			onmouseover="QuickStats('Other', 16);"
+			/>
 			<text x="26.53" y="785.6" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Other</text>		</g>
+		
 		<g id="shape281-265" v:mID="281" v:groupContext="shape" v:layerMember="0" transform="translate(783,-330.75)">
 			<title>Dynamic connector.281</title>
 			<path d="M0 792 L13.5 792 L13.5 1108 L52.34 1108" class="st13"/>
 		</g>
 		<g id="shape282-270" v:mID="282" v:groupContext="shape" transform="translate(810,-540.25)">
-			<title>Sheet.282</title>
+			<title>Post Acute Care</title>
 			<desc>Post Acute Care</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="76" cy="782" width="152" height="20"/>
-			<rect x="0" y="772" width="152" height="20" class="st1"/>
+			<rect x="0" y="772" width="152" height="20" class="st1"	/>
 			<text x="22.57" y="786.8" class="st17" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Post Acute Care</text>		</g>
+	
 		<g id="shape19-273" v:mID="19" v:groupContext="shape" v:layerMember="3" transform="translate(539.156,-427.25)">
-			<title>Rectangle.19</title>
+			<title>Intensive Care Unit</title>
 			<desc>Intensive Care Unit</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="45.8437" cy="751.25" width="91.69" height="81.5"/>
-			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"/>
+			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"
+			onmouseover="QuickStats('Intensive Care Unit', 4);"
+			/>
 			<text x="9.64" y="747.65" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Intensive Care <tspan
 						x="35.73" dy="1.2em" class="st5">Unit</tspan></text>		</g>
+		
 		<g id="shape20-277" v:mID="20" v:groupContext="shape" v:layerMember="3" transform="translate(539.156,-332.5)">
-			<title>Rectangle.20</title>
+			<title>Critical Care Unit</title>
 			<desc>Critical Care Unit</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="45.8437" cy="751.25" width="91.69" height="81.5"/>
-			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"/>
+			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"
+			onmouseover="QuickStats('Critical Care Unit', 5);"
+			/>
 			<text x="15.2" y="747.65" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Critical Care <tspan
 						x="35.73" dy="1.2em" class="st5">Unit</tspan></text>		</g>
+		
 		<g id="shape21-281" v:mID="21" v:groupContext="shape" v:layerMember="3" transform="translate(539.156,-238.25)">
-			<title>Rectangle.21</title>
+			<title>Intermediate Care Unit</title>
 			<desc>Intermediate Care Unit</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="45.8437" cy="751.25" width="91.69" height="81.5"/>
-			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"/>
+			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"
+			onmouseover="QuickStats('Intermediate Care Unit', 6);"
+			/>
 			<text x="13.39" y="747.65" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Intermediate <tspan
 						x="22.49" dy="1.2em" class="st5">Care Unit</tspan></text>		</g>
+		
 		<g id="shape22-285" v:mID="22" v:groupContext="shape" v:layerMember="3" transform="translate(539.156,-143.5)">
-			<title>Rectangle.22</title>
+			<title>Other Inpatient</title>
 			<desc>Other Inpatient</desc>
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
 			<v:textRect cx="45.8437" cy="751.25" width="91.69" height="81.5"/>
-			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"/>
+			<rect x="0" y="710.5" width="91.6875" height="81.5" class="st3"
+			onmouseover="QuickStats('Other Inpatient', 7);"
+			/>
 			<text x="7.8" y="754.85" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Other Inpatient</text>		</g>
+			
 		<g id="shape283-288" v:mID="283" v:groupContext="shape" v:layerMember="0" transform="translate(361.125,-324)">
 			<title>Dynamic connector.283</title>
 			<path d="M1.13 783 L10.71 783" class="st13"/>
@@ -635,11 +697,51 @@
 </svg>
 </body>
 <script>
-function QuickStats(site, dept) {
-	// fill the div
-	var str = "<p>Stats for Hospital Emergency Dept:" + dept +"</p>";
-	$('#dialog').html(str);
-	$('#dialog').popover('show');
+var previous_dept = 0;
+
+function QuickStats(name, dept) {
+	if( dept == previous_dept ) return;
+	previous_dept = dept;
+	
+	// Make the ajax call to get the data
+	$.getJSON('/site/transitions/'+ <%= site.id %> +'/'+ dept, function(data) {
+		console.log('got data for dept:', dept)
+		// fill the div
+		var str = "<h4>Quick Statistics: " + name +"</h4>";
+		str += "<table class='table .table-condensed'>"
+		str += "<colgroup>"
+	    str += "   <col span='1' style='width: 30%;'>"
+	    str += "   <col span='1' style='width: 20%;'>"
+	    str += "   <col span='1' style='width: 20%;'>"
+	    str += "   <col span='1' style='width: 20%;'>"
+	    str += "   <col span='1' style='width: 20%;'>"
+	    str += "</colgroup>"
+
+		str += "<thead><tr bgcolor='#7aa69c'><th>Measure</th><th class='text-right'>Your Hospital</th><th class='text-right'>Other BPCI Participants</th><th class='text-right'>Local Comparison Group</th>";
+		str += "<th class='text-right'>True Comp. Group</th></thead>";
+		str += "<tbody>"
+		
+		for( m in data ) {
+			var measure = data[m]
+			str += "<tr><td>"+ measure.measure + "</td>"
+			
+			var delta = measure.delta
+			if( measure.delta > 0 ) delta = "+"+measure.delta
+				
+			str += "<td class='text-right'>"+ measure.val +" ("+delta+")</td>"
+			str += "<td class='text-right'>"+ measure.ctrl1+"</td>"
+			str += "<td class='text-right'>"+measure.ctrl2+"</td>"
+			str += "<td class='text-right'>"+measure.ctrl3+"</td></tr>";
+		}
+		str += "</tbody></table>"
+
+		$('#dialog').html(str);
+		$('#dialog').show();
+	})
 }
+
+(function () {
+	QuickStats('Hospital Emergency Department', 1);
+})
 </script>
 </html>

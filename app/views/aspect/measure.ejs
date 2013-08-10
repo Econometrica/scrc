@@ -21,7 +21,7 @@ $(function() {
 			colors 			= Highcharts.getOptions().colors;
 			
 		$.each(sites, function(i, name) {
-			$.getJSON('http://localhost:7464/site/measure/'+ <%= measure.id %> +'/'+ name, function(data) {
+			$.getJSON('/site/measure/'+ <%= measure.id %> +'/'+ name, function(data) {
 					var type = 'line';
 					if( i == 0) type='column';
 					seriesOptions[i] = {
@@ -65,7 +65,21 @@ $(function() {
 				},
 
 				rangeSelector: {
-					selected: 4
+					buttons: [
+					{
+						type: 'month',
+						count: 3,
+						text: '1q'
+					},
+					{
+						type: 'year',
+						count: 1,
+						text: '1y'
+					}, {
+						type: 'all',
+						text: 'All'
+					}],
+					selected: 2
 				},
 				subtitle: {
 					align: 'center',

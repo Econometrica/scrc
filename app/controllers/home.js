@@ -97,12 +97,13 @@ module.exports = {
 			},
 		], function(err, results) {
 				//eyes.inspect(results[0], "sites")
-				eyes.inspect(results[1], "summary")
+				//eyes.inspect(results[1], "summary")
 				
 				res.render( 'home/index.ejs', 
 					{ 	layout: "layout.ejs",
 						geojson: results[0],
-						summary: results[1].summary });
+						summary: results[1].summary,
+						user: 	 req.user });
 		})
 	}
 };
