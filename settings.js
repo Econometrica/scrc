@@ -85,7 +85,7 @@ function bootApplication(app) {
 
 	var pg 			= require('pg'); 
 	var conString 	= process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/scrc";
-	console.log("Connecting to db:", constring)
+	console.log("Connecting to db:", conString)
 	
  	function pgConnect (callback) {
 		//console.log("pgConnect...")
