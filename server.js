@@ -22,10 +22,11 @@ global.app 			= app;
 app.root 			= process.cwd();
 
 // we need to configure environment
-debug(util.inspect(app.settings));
+console.log(util.inspect(app.settings));
 
 var mainEnv 	= app.root + '/config/environment'+'.js';
 var supportEnv 	= app.root + '/config/environments/' + app.settings.env+'.js';
+
 require(mainEnv)
 require(supportEnv)
 
