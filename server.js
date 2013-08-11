@@ -8,7 +8,8 @@ var express 		= require('express'),
 	fs				= require('fs'),
   	debug 			= require('debug')('server'),
 	passport 		= require('passport'),
-	BasicStrategy 	= require('passport-http').BasicStrategy,
+	Localtrategy 	= require('passport-local').Strategy,
+	//BasicStrategy 	= require('passport-http').BasicStrategy,
 	home			= require('./app/controllers/home'),
 	login			= require('./app/controllers/login'),
 	aspect			= require('./app/controllers/aspect'),
@@ -33,70 +34,66 @@ require(supportEnv)
 // load settings
 require('./settings').boot(app)  
 
-
-
 // load controllers
 require('./lib/boot')(app, { verbose: !module.parent });
-
 
 // =========================================
 // ROUTING
 //
 
-// Access Control Function
-function restrict(req, res, next) {
- 	if( req.session ) {
-		next();
-		return;
-  	}
-  	// Failed... login
-	console.log('Sorry...restricted!')
-	if( !req.session) console.log('Sorry...no session!')
 
-    res.format({
-		html: function(req, res) {
-			var redirect_to		= '/login?requested_url='+req.url;
-			console.log("unauthorized! redirect to:"+redirect_to);
-		    res.redirect(redirect_to, 302);
-		},
-		json: function() {
-			var headers = {
-				'Status': 			"Unauthorized",
-			}
-			res.send("Unauthorized", headers, 401);
-		}
-	})
+function auth(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login')
 }
 
 // Home page -> app
-app.get('/', 									passport.authenticate('basic', { session: false }), home.index);
-app.get('/sites.geojson',						passport.authenticate('basic', { session: false }), home.sites);
-app.get('/site/transitions/:id',				passport.authenticate('basic', { session: false }), aspect.transitions);
-app.get('/site/transitions/:site_id/:dept_id',	passport.authenticate('basic', { session: false }), aspect.transitions_department);
+app.get('/', 									auth, home.index);
+app.get('/sites.geojson',						auth, home.sites);
+app.get('/site/transitions/:id',				auth, aspect.transitions);
+app.get('/site/transitions/:site_id/:dept_id',	auth, aspect.transitions_department);
 
 //app.get('/site/transitions/:site_id/:dept_id',	aspect.transitions_department);
 
-app.get('/site/measures/:id',					passport.authenticate('basic', { session: false }), aspect.measures);
-app.get('/site/measure/:id',					passport.authenticate('basic', { session: false }), aspect.measure);
-app.get('/site/measure/:mid/:sid',				passport.authenticate('basic', { session: false }), aspect.site_measure);
-app.get('/site/drgs/:id',						passport.authenticate('basic', { session: false }), aspect.drgs);
-app.post('/site/drg',							passport.authenticate('basic', { session: false }), aspect.drg);
-app.get('/site/sdsm',							passport.authenticate('basic', { session: false }), aspect.sdsm);
+app.get('/site/measures/:id',					auth, aspect.measures);
+app.get('/site/measure/:id',					auth, aspect.measure);
+app.get('/site/measure/:mid/:sid',				auth, aspect.site_measure);
+app.get('/site/drgs/:id',						auth, aspect.drgs);
+app.post('/site/drg',							auth, aspect.drg);
+app.get('/site/sdsm',							auth, aspect.sdsm);
 
 app.get('/site/bsdmp/:site_id/:drg_id/:m_id/:pop_id/:year/:quarter',
-			passport.authenticate('basic', { session: false }), aspect.benchmark_sdmp);
+			auth, aspect.benchmark_sdmp);
 
-app.get('/site/benchmarks/:id',					passport.authenticate('basic', { session: false }), aspect.benchmarks);
-app.post('/site/benchmark',						passport.authenticate('basic', { session: false }), aspect.benchmark);
+app.get('/site/benchmarks/:id',					auth, aspect.benchmarks);
+app.post('/site/benchmark',						auth, aspect.benchmark);
 
 app.get('/contact', 							home.contact);
 app.get('/about', 								home.about);
 
 app.get('/login', 								login.index);
-app.get('/logout', 								login.logout);
 
-app.get('/generator',							generator.index);
-app.get('/test',								test.index);
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return next(err) }
+    if (!user) {
+      req.session.messages = [info.message];
+      return res.redirect('/login')
+    }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/');
+    });
+  })(req, res, next);
+});
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+app.get('/generator',							auth, generator.index);
+app.get('/test',								auth, test.index);
 
 
 // ===========================================================

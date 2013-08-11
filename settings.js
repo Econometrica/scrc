@@ -7,7 +7,8 @@ var express 		= require('express'),
 	debug 			= require('debug')('server'),
 	engines			= require('consolidate'),
 	passport 		= require('passport'),
-	BasicStrategy 	= require('passport-http').BasicStrategy,
+	LocalStrategy 	= require('passport-local').Strategy,
+	//BasicStrategy 	= require('passport-http').BasicStrategy,
 	PGStore 		= require('connect-pg'),
 	ejs				= require('ejs');
 		
@@ -135,7 +136,7 @@ function bootApplication(app) {
 	}
 	
 
-	passport.use(new BasicStrategy({
+	passport.use( new LocalStrategy({
 	  },
 	  function(username, password, done) {
 	    // asynchronous verification, for effect...

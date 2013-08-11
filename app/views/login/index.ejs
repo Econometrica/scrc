@@ -58,19 +58,21 @@
       <div class="hero-unit">
 
 		<h1>Log in </h1>
-	
 		<br/>
-		<ul>
-			<li><%- authorizationLink('facebook', 'Facebook') %></li>
-			<li><%- authorizationLink('google', 'Google') %></li>
-			<li><%- authorizationLink('gmail', 'Gmail') %></li>
-			<li><%- authorizationLink('linkedin', 'LinkedIn') %></li>
-		</ul>
-		<hr/>
 		
-		<footer>
-        	<p><%= config.copyright %></p>
-      	</footer>
+		<form action="/login" method="post">
+		    <div>
+		        <label>Username:</label>
+		        <input type="text" name="username"/>
+		    </div>
+		    <div>
+		        <label>Password:</label>
+		        <input type="password" name="password"/>
+		    </div>
+		    <div>
+		        <input type="submit" value="Log In"/>
+		    </div>
+		</form>
 		
  	  </div>
 	</div>
