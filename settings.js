@@ -83,10 +83,12 @@ function bootApplication(app) {
 	app.use(express.bodyParser())
 	app.use(express.methodOverride())
 
-	var pg = require('pg'); 
-	var conString = "postgres://postgres:postgres@localhost:5432/scrc";
+	var pg 			= require('pg'); 
+	var conString 	= process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/scrc";
+	console.log("Connecting to db:", constring)
+	
  	function pgConnect (callback) {
-		console.log("pgConnect...")
+		//console.log("pgConnect...")
 		pg.connect(conString,
 		function (err, client, done) {
 			if (err) {
