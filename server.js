@@ -122,5 +122,5 @@ debug("trying to start on port:"+ app.get('port'));
 if (!module.parent) {
 	app.listen(app.get('port'));
 	
-	console.log( app.config.application+' started on port:'+app.get('port'));
+	console.log( "**** "+app.config.application+' started on port:'+app.get('port'));
 }

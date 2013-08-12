@@ -109,7 +109,7 @@ function bootApplication(app) {
 	app.use(express.session({
 		  secret: app.sessionSecret,
 		  //cookie: { maxAge: 24 * 360000}, //1 Hour*24 in milliseconds
-		  cookie: { maxAge: 24 * 1}, //1 Hour*24
+		  cookie: { maxAge: null}, 
 		  store: new PGStore(pgConnect)
 	}))
 
