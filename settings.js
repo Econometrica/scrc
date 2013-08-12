@@ -12,6 +12,9 @@ var express 		= require('express'),
 	PGStore 		= require('connect-pg'),
 	ejs				= require('ejs'),
 	analytics 		= require('analytics-node');
+
+	// Pick a secret to secure your session storage
+	app.sessionSecret = process.env.COOKIEHASH || 'SCRC-PGC-2012-07';
 	
 	exports.boot = function(app){
 	   bootApplication(app)
@@ -38,10 +41,8 @@ var express 		= require('express'),
 	app.set('hostBaseUrl', hostBaseUrl)
 	app.set('port', port)
 		
-	// Pick a secret to secure your session storage
-	var sessionSecret = 'SCRC-PGC-2012-07';
 
-	analytics.init({ secret: sessionSecret });
+	analytics.init({ secret: app.sessionSecret });
 
 // =========================================
 // settings
@@ -81,7 +82,7 @@ function bootApplication(app) {
 	app.set('view options', { layout: 'layout.ejs' })
 
 	// cookieParser should be above session
-	app.use(express.cookieParser())
+	app.use(express.cookieParser(process.env.COOKIEHASH))
 
 	// bodyParser should be above methodOverride
 	app.use(express.bodyParser())
@@ -106,7 +107,7 @@ function bootApplication(app) {
     };	
 		
 	app.use(express.session({
-		  secret: sessionSecret,
+		  secret: app.sessionSecret,
 		  //cookie: { maxAge: 24 * 360000}, //1 Hour*24 in milliseconds
 		  cookie: { maxAge: 24 * 1}, //1 Hour*24
 		  store: new PGStore(pgConnect)
