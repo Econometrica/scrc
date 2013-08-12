@@ -43,8 +43,11 @@ require('./lib/boot')(app, { verbose: !module.parent });
 
 
 function auth(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+	if (req.isAuthenticated()) { 
+		return next();
+	}
+	console.log("auth not authenticated... please login...")
+	res.redirect('/login')
 }
 
 // Home page -> app
@@ -73,16 +76,32 @@ app.get('/about', 								home.about);
 
 app.get('/login', 								login.index);
 
+app.post('/login/3',
+  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
 app.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
-    if (err) { return next(err) }
-    if (!user) {
-      req.session.messages = [info.message];
-      return res.redirect('/login')
-    }
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      return res.redirect('/');
+	if (err) { 
+		console.log('Post login authenticate err:', err)
+		return next(err) 
+	}
+	
+	if (!user) {
+		console.log("Post login authenticate no user")
+		req.session.messages = [info.message];
+		return res.redirect('/login')
+	}
+	
+	req.logIn(user, function(err) {
+		if (err) { 
+			console.log("req login err:", err)
+			return next(err);
+		}
+		console.log("req.login passed")
+		return res.redirect('/');
     });
   })(req, res, next);
 });

@@ -68,7 +68,13 @@
 		    display: none
 		}
 	</style>
-	
+
+	<script type="text/javascript">
+		var analytics=analytics||[];(function(){var e=["identify","track","trackLink","trackForm","trackClick","trackSubmit","page","pageview","ab","alias","ready","group"],t=function(e){return function(){analytics.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var n=0;n<e.length;n++)analytics[e[n]]=t(e[n])})(),analytics.load=function(e){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+e+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n)};
+
+		analytics.load("bko78k0ya3");
+		analytics.identify( '<%= user.username %>', {});
+	</script>	
   </head>
 
   <body>
@@ -99,29 +105,14 @@
 
 	<%- body %>
 	
-	<hr>
-	<div id="disqus_thread"></div>
 	<hr/>
-	
+		
 	<div class='footer'>
 		<div class="container">
 		<p><a href='http://www.econometricainc.com'><img src='/img/EconometricaLogo.jpg' width='256' /></a></p>
-		<a href='mailto:jcrane@econometricainc.com'>Problem/question? Contact Me<a>
+		<a href='mailto:jcrane@econometricainc.com'>Problem/question? Contact Me</a>
 		</div>
-	</footer>
+	</div>
+
 </body>
-
-<script type="text/javascript">
-    var disqus_shortname = 'scrsproto'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
-<html>
+</html>

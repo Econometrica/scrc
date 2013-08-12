@@ -237,7 +237,10 @@ module.exports = {
 		
 		console.log('transitions', id)
 		getSite(id, function(err, result ) {
-			res.render( 'aspect/transitions.ejs', {layout: 'layout.ejs', site: result});	
+			res.render( 'aspect/transitions.ejs', {
+				layout: 'layout.ejs', 
+				user: user,
+				site: result});	
 		})
 	},
 	
@@ -245,9 +248,9 @@ module.exports = {
 	transitions_department: function(req, res) {
 		var site_id = req.params['site_id']
 		var dept_id = req.params['dept_id']
-		//var user 	= req.user
+		var user 	= req.user
 		
-		//if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
+		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
 		console.log('dept transitions of care, site:', site_id, 'dept:', dept_id)
 		
@@ -408,7 +411,8 @@ module.exports = {
 				res.render( 'aspect/measure.ejs', 
 					{	layout: 'layout.ejs', 
 						site: 	results[0],
-						measure: results[1]
+						measure: results[1],
+						user: user
 					});	
 		})
 	},
@@ -444,7 +448,8 @@ module.exports = {
 				{ 	layout: 'layout.ejs', 
 					site: 		results[0],
 					measures: 	results[1],
-					domains:    results[2]
+					domains:    results[2],
+					user:       user
 				});				
 		})
 	},
@@ -492,7 +497,8 @@ module.exports = {
 					site: 		results[0],
 					subpop:		results[1],
 					drg: 		results[2],
-					measures: 	results[3]
+					measures: 	results[3],
+					user: 		user
 				});	
 		})
 	},
@@ -528,6 +534,7 @@ module.exports = {
 					site: 			results[0],
 					drgs: 			results[1],
 					subpopulations: results[2],
+					user: 			user
 				});	
 		})
 	},
@@ -536,6 +543,7 @@ module.exports = {
 	benchmarks:  function(req,res) {
 		var id 		= req.params['id']
 		var user 	= req.user
+		
 		console.log('benchmarks', id)
 		
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')

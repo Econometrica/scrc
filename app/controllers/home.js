@@ -82,7 +82,7 @@ module.exports = {
 	
 	index: function(req, res) {
 		eyes.inspect(req.headers, "headers")
-		eyes.inspect(req.user, "user")
+		//eyes.inspect(req.user, "user")
 		async.parallel([
 			function(callback) {
 				getSitesGeoJSON( req.user, function(err, result ) {
@@ -91,7 +91,7 @@ module.exports = {
 			},
 			function(callback) {
 				getSummary( req.user.site_id, function(err, result ) {
-					eyes.inspect(result, "summary")
+					//eyes.inspect(result, "summary")
 					callback(err, result)
 				})
 			},

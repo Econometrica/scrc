@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title><%= site.name %></title>
+
 	<style>
 		.text-right {
 			text-align: right !important;
 		}
 	</style>
-<head>	
-<body>
 
 	<%- partial('site.ejs', {site: site})%>
 
@@ -695,7 +690,7 @@
 		</g>
 	</g>
 </svg>
-</body>
+
 <script>
 var previous_dept = 0;
 
@@ -742,6 +737,10 @@ function QuickStats(name, dept) {
 
 (function () {
 	QuickStats('Hospital Emergency Department', 1);
-})
+});
+
+analytics.track('Transitions Of Care', {
+    siteId   : <%= site.id %>,
+    siteName : "<%= site.name %>"
+});
 </script>
-</html>

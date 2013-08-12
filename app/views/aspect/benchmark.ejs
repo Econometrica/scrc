@@ -27,6 +27,25 @@
 	</table>
 </div>
 
+<hr/>
+
+<div class='container'>
+<div id="disqus_thread"></div>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<!-- DISQUS -->
+<script type="text/javascript">
+	var disqus_shortname = 'scrsproto';
+
+	(function() {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
 <script src="/js/Highstock-1.3.4/js/highstock.js"></script>
 <script src="/js/Highstock-1.3.4/js/modules/exporting.js"></script>
 	
@@ -43,7 +62,7 @@ function GraphMeasure(index, measure, callback ) {
 	var query = '<%= host %>/site/bsdmp/<%= site.id %>/<%= drg.id %>/'
 	query += measure.measure_id+'/<%= subpopulation.id %>/<%= year %>/<%= quarter %>';
 	
-	console.log('query:', query)
+	//console.log('query:', query)
 	
 		$.ajax({
 			type: 'GET',
@@ -51,7 +70,7 @@ function GraphMeasure(index, measure, callback ) {
 			async: false 
 		})
 		.success( function(results) {
-			console.log('succeeded...');
+			//console.log('succeeded...');
 			g.seriesOptions = results
 			createChart( g.seriesOptions, callback );
 		})
@@ -67,7 +86,7 @@ function GraphMeasure(index, measure, callback ) {
 		var container_index = parseInt(index)+1
 		var container 		= 'container'+container_index;
 		
-		console.log('createChart in container:'+container);
+		//console.log('createChart in container:'+container);
 		
 		$('#'+container).highcharts( {
 			chart: {
@@ -154,11 +173,11 @@ function GraphMeasure(index, measure, callback ) {
 };
 
 function findSite( i) {
-	console.log("find site:", i)
+	//console.log("find site:", i)
 	if( categories[i] != undefined ) return categories[i];
 	
 	for( s in sites) {
-		console.log( sites[s].id, sites[s].name )
+		//console.log( sites[s].id, sites[s].name )
 		if( sites[s].id == i ) {
 			categories[i] = sites[s].name;
 			return sites[s].name;
@@ -173,9 +192,18 @@ $(function() {
 	sites			= <%- JSON.stringify(sites) %>; 
 
 	for( m in measures ) {
-			console.log("doing graph:",m);
+			//console.log("doing graph:",m);
 			GraphMeasure(m, measures[m], function(err) {
 		});
 	}
 })
+
+analytics.track('DRG Benchmark Chart', {
+	drgId:				<%= drg.id %>,
+	drgName:			"<%= drg.name %>",
+	subPopulationId: 	<%= subpopulation.id %>,
+	subPopulationName: "<%= subpopulation.name %>",
+    Year:	 			<%= year %>,
+    Quarter:			<%= quarter %>
+});
 </script>

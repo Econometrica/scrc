@@ -10,8 +10,9 @@ var express 		= require('express'),
 	LocalStrategy 	= require('passport-local').Strategy,
 	//BasicStrategy 	= require('passport-http').BasicStrategy,
 	PGStore 		= require('connect-pg'),
-	ejs				= require('ejs');
-		
+	ejs				= require('ejs'),
+	analytics 		= require('analytics-node');
+	
 	exports.boot = function(app){
 	   bootApplication(app)
 	}
@@ -39,6 +40,8 @@ var express 		= require('express'),
 		
 	// Pick a secret to secure your session storage
 	var sessionSecret = 'SCRC-PGC-2012-07';
+
+	analytics.init({ secret: sessionSecret });
 
 // =========================================
 // settings
@@ -104,7 +107,8 @@ function bootApplication(app) {
 		
 	app.use(express.session({
 		  secret: sessionSecret,
-		  cookie: { maxAge: new Date(Date.now() + 360000)}, //1 Hour
+		  //cookie: { maxAge: 24 * 360000}, //1 Hour*24 in milliseconds
+		  cookie: { maxAge: 24 * 1}, //1 Hour*24
 		  store: new PGStore(pgConnect)
 	}))
 
@@ -134,25 +138,32 @@ function bootApplication(app) {
 			return fn(err, result)
 	  	})
 	}
-	
 
-	passport.use( new LocalStrategy({
-	  },
-	  function(username, password, done) {
-	    // asynchronous verification, for effect...
-	    process.nextTick(function () {
-			console.log("Basic Strategy:", username)
-	      // Find the user by username. If there is no user with the given
-	      // username, or the password is not correct, set the user to `false` to
-	      // indicate failure. Otherwise, return the authenticated `user`.
-	      findByUsername(username, function(err, user) {
-	        if (err) { return done(err); }
-	        if (!user) { return done(null, false); }
-	        if (user.password != password) { return done(null, false); }
-	        return done(null, user);
-	      })
-	    });
-	  }
+	passport.use( new LocalStrategy({},
+		function(username, password, done) {
+			// asynchronous verification, for effect...
+			process.nextTick(function () {
+				console.log("Passport Local Strategy User Check:", username, password)
+				// Find the user by username. If there is no user with the given
+				// username, or the password is not correct, set the user to `false` to
+				// indicate failure. Otherwise, return the authenticated `user`.
+				findByUsername(username, function(err, user) {
+					if (err) { 
+						console.log("user not found:", user, err)
+						return done(err); 
+					}
+					if (!user) {
+						console.log("Undefined user returned by findByUsername")
+						return done(null, false); 
+					}
+					if (user.password != password) { 
+						console.log("User password mismatched")
+						return done(null, false); 
+					}
+					return done(null, user);
+				})
+			});
+		}
 	));
 
 	passport.serializeUser(function(user, done) {
