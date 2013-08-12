@@ -171,11 +171,13 @@ function bootApplication(app) {
 		done(null, user);
 	});
 	
-	passport.deserializeUser(function(id, done) {
-		console.log('deserialize:', id)
-		//app.client.query('SELECT * FROM users where id='+id, function(err, user) {
-	  	    done(null, id);
+	passport.deserializeUser(function(user, done) {
+		console.log('deserialize:', util.inspect(user))
+		//app.client.query('SELECT * FROM users where username='+user.username, function(err, user) {
+		//	console.log(user.rows[0])
+	  	//  done(null, user.rows[0]);
 	  	//});
+		done(null, user);
 	});
 	
 	app.use(passport.initialize());
