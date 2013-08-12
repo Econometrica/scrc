@@ -167,7 +167,8 @@ function bootApplication(app) {
 	));
 
 	passport.serializeUser(function(user, done) {
-	  done(null, user);
+		console.log('serialize:', util.inspect(user))
+		done(null, user);
 	});
 	
 	passport.deserializeUser(function(id, done) {
