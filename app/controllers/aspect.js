@@ -8,7 +8,7 @@ var util	= require('util'),
 //
 function getYears( fn ) {
 	var query = "SELECT * from years"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -18,7 +18,7 @@ function getYears( fn ) {
 //
 function getQuickMeasures( fn ) {
 	var query = "SELECT * from joined_quick_statistics"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		//eyes.inspect(result, "getQuickMeasures")
 		fn(err, result.rows)
@@ -31,7 +31,7 @@ function getQuickMeasures( fn ) {
 //
 function getQuickStatsData(site_id, dept_id, measures, fn ) {
 	var query = "SELECT * from transitional_care_data where site_id="+site_id+" and department_id="+dept_id
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, results) {
 		var result			= results.rows
 		var data 			= []
@@ -41,7 +41,7 @@ function getQuickStatsData(site_id, dept_id, measures, fn ) {
 			for(var m in measures ) {
 				if( measures[m].id == id ) return measures[m]
 			}
-			console.log("measure:", id, "not found")
+			logger.info("measure:", id, "not found")
 			return null;
 		}
 		
@@ -73,7 +73,7 @@ function getQuickStatsData(site_id, dept_id, measures, fn ) {
 //
 function getSites( fn ) {
 	var query = "SELECT * from sites"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -84,7 +84,7 @@ function getSites( fn ) {
 //
 function getSite( id, fn ) {
 	var query = "SELECT * from sites where id="+id
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows[0])
 	})
@@ -95,7 +95,7 @@ function getSite( id, fn ) {
 //
 function getDrgs( fn ) {
 	var query = "SELECT * from drgs order by id"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -106,7 +106,7 @@ function getDrgs( fn ) {
 //
 function getDrg(id, fn ) {
 	var query = "SELECT * from drgs where id="+id
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows[0])
 	})
@@ -114,7 +114,7 @@ function getDrg(id, fn ) {
 
 function getSelectedDrgMeasures(fn ) {
 	var query = "SELECT * from by_drg_statistics"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -124,7 +124,7 @@ function getSelectedDrgMeasures(fn ) {
 //
 function getMeasures( fn ) {
 	var query = "SELECT * from measures"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -134,7 +134,7 @@ function getMeasures( fn ) {
 //
 function getMeasure(id, fn ) {
 	var query = "SELECT * from measures where id="+id
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows[0])
 	})
@@ -145,7 +145,7 @@ function getMeasure(id, fn ) {
 //
 function getSubpopulations( fn ) {
 	var query = "SELECT * from subpopulations"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -156,7 +156,7 @@ function getSubpopulations( fn ) {
 //
 function getSubpopulation(id, fn ) {
 	var query = "SELECT * from subpopulations where id="+id
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows[0])
 	})
@@ -168,9 +168,8 @@ function get_sdsm( site_id, drg_id, subpop_id, measure_id, fn) {
 	query += " and subpopulation_id="+subpop_id
 	query += " and measure_id="+measure_id
 	
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
-		console.log("err:"+err)
 		fn(err, result.rows)
 	})
 }
@@ -185,9 +184,8 @@ function get_benchmark_sdsm( site_id, drg_id, subpop_id, measure_id, year, quart
 	query += " and quarter="+quarter
 	query += " order by site_id, episode_id"
 	
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
-		console.log("err:"+err)
 		fn(err, result.rows)
 	})
 }
@@ -198,7 +196,7 @@ function get_benchmark_sdsm( site_id, drg_id, subpop_id, measure_id, year, quart
 function get_measure_year_quarter(s_id, m_id, fn ) {
 	var query = "SELECT * from by_site_measure_year_quarter where measure_id="+m_id
 	query += " and (site_id ="+s_id+" or site_id<10)"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -210,7 +208,7 @@ function get_measure_year_quarter(s_id, m_id, fn ) {
 function get_site_measure_year_quarter(s_id, m_id, fn ) {
 	var query = "SELECT * from by_site_measure_year_quarter where measure_id="+m_id
 	query += " and (site_id ="+s_id+")"
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -221,7 +219,7 @@ function get_site_measure_year_quarter(s_id, m_id, fn ) {
 //
 function getDomains( fn ) {
 	var query = "SELECT * from domains order by id "
-	console.log(query) 
+	logger.info(query) 
 	app.client.query(query, function(err, result) {
 		fn(err, result.rows)
 	})
@@ -235,7 +233,7 @@ module.exports = {
 		
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
-		console.log('transitions', id)
+		logger.info('transitions', id)
 		getSite(id, function(err, result ) {
 			res.render( 'aspect/transitions.ejs', {
 				layout: 'layout.ejs', 
@@ -252,7 +250,7 @@ module.exports = {
 		
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
-		console.log('dept transitions of care, site:', site_id, 'dept:', dept_id)
+		logger.info('dept transitions of care, site:', site_id, 'dept:', dept_id)
 		
 		try {
 			getQuickMeasures(function(err, mresult ) {
@@ -279,7 +277,6 @@ module.exports = {
 						})
 					},
 				], function(err, results) {
-					console.log("merge ctrl values:", err)
 					var ctrl1 		= results[0]
 					var ctrl2 		= results[1]
 					var ctrl3		= results[2]
@@ -291,12 +288,11 @@ module.exports = {
 						measures[m].ctrl3 = ctrl3[m].val
 					}
 					//eyes.inspect(measures, "measures")
-					console.log("merge done")
 					res.send(measures);
 				})
 			})
 		} catch(err) {
-			console.log('getQuickMeasures exception:', err)
+			logger.info('getQuickMeasures exception:', err)
 		}
 	},
 	//
@@ -305,7 +301,7 @@ module.exports = {
 	site_measure: function(req,res) {
 		var m_id 	= req.params['mid']
 		var s_id 	= req.params['sid']
-		console.log("json measure:", m_id, " site:", s_id)
+		logger.info("json measure:", m_id, " site:", s_id)
 		get_site_measure_year_quarter( s_id, m_id, function(err, results ) {
 			var json = []
 			var months = []
@@ -394,7 +390,7 @@ module.exports = {
 			return res.send('Sorry!!! UnAuthorized')
 		}
 		
-		console.log('measure ', m_id, ' for site:', s_id, ' user site:', user.site_id)
+		logger.info('measure ', m_id, ' for site:', s_id, ' user site:', user.site_id)
 		
 		async.parallel([
 			function(callback) {
@@ -424,7 +420,7 @@ module.exports = {
 
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 
-		console.log('measures for site:', id)
+		logger.info('measures for site:', id)
 		
 		async.parallel([
 			function(callback) {
@@ -507,7 +503,7 @@ module.exports = {
 	drgs: function(req,res) {
 		var id 		= req.params['id']
 		var user 	= req.user
-		console.log('drgs', id)
+		logger.info('drgs', id)
 		
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
@@ -544,7 +540,7 @@ module.exports = {
 		var id 		= req.params['id']
 		var user 	= req.user
 		
-		console.log('benchmarks', id)
+		logger.info('benchmarks', id)
 		
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
@@ -591,7 +587,7 @@ module.exports = {
 		var year 	= req.params['year']
 		var quarter = req.params['quarter']
 		
-		console.log( "benchmark_sdmp", site_id, "drg:",drg_id, "measure:",m_id, "subpop:", pop_id, year, quarter)
+		logger.info( "benchmark_sdmp", site_id, "drg:",drg_id, "measure:",m_id, "subpop:", pop_id, year, quarter)
 		
 		function reformat( results ) {
 			var series = [ 
@@ -633,7 +629,7 @@ module.exports = {
 		var arr		= drg.split(' ')
 		var drg_id	= arr[0]
 		
-		console.log("benchmark", id, drg, year, quarter, drg_id)
+		logger.info("benchmark", id, drg, year, quarter, drg_id)
 		 
 		async.parallel([
 			function(callback) {
@@ -665,7 +661,7 @@ module.exports = {
 							if( result[s].id > 9 )  {	// Control Groups
 								if( result[s].id != user.site_id ) {
 									result[s].name = 'site '+result[s].id;
-									//console.log("Obfuscate ", result[s].id, " to ", result[s].name)
+									//logger.info("Obfuscate ", result[s].id, " to ", result[s].name)
 								}
 							}
 						}

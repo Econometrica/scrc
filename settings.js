@@ -11,7 +11,20 @@ var express 		= require('express'),
 	//BasicStrategy 	= require('passport-http').BasicStrategy,
 	PGStore 		= require('connect-pg'),
 	ejs				= require('ejs'),
-	analytics 		= require('analytics-node');
+	analytics 		= require('analytics-node'),
+	winston 		= require('winston');
+	
+  	require('winston-papertrail').Papertrail;
+
+  	global.logger = new winston.Logger({
+    transports: [
+        new winston.transports.Papertrail({
+            host: 'logs.papertrailapp.com',
+            port: 12836,
+            colorize: true
+        })
+    ]
+  });
 
 	// Pick a secret to secure your session storage
 	app.sessionSecret = process.env.COOKIEHASH || 'SCRC-PGC-2012-07';
@@ -90,14 +103,14 @@ function bootApplication(app) {
 
 	var pg 			= require('pg'); 
 	var conString 	= process.env.DATABASE_URL || "postgres://postgres:postgres@localhost:5432/scrc";
-	console.log("Connecting to db:", conString)
+	logger.info("Connecting to db:", conString)
 	
  	function pgConnect (callback) {
-		//console.log("pgConnect...")
+		//logger.info("pgConnect...")
 		pg.connect(conString,
 		function (err, client, done) {
 			if (err) {
-				console.log(JSON.stringify(err));
+				logger.info(JSON.stringify(err));
 			}
 			if (client) {
 				callback(client);
@@ -122,7 +135,7 @@ function bootApplication(app) {
 	    if(err) {
 	      return console.error('error running query', err);
 	    }
-	    console.log("postgres time:", result.rows[0].theTime);
+	    logger.info("postgres time:", result.rows[0].theTime);
 	    //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
 	    //
 	  });
@@ -144,23 +157,24 @@ function bootApplication(app) {
 		function(username, password, done) {
 			// asynchronous verification, for effect...
 			process.nextTick(function () {
-				console.log("Passport Local Strategy User Check:", username, password)
+				// logger.info("Passport Local Strategy User Check:", username, password)
 				// Find the user by username. If there is no user with the given
 				// username, or the password is not correct, set the user to `false` to
 				// indicate failure. Otherwise, return the authenticated `user`.
 				findByUsername(username, function(err, user) {
 					if (err) { 
-						console.log("user not found:", user, err)
+						logger.info("user not found:", user, err)
 						return done(err); 
 					}
 					if (!user) {
-						console.log("Undefined user returned by findByUsername")
+						logger.info("Undefined user returned by findByUsername")
 						return done(null, false); 
 					}
 					if (user.password != password) { 
-						console.log("User password mismatched")
+						logger.info("User password mismatched")
 						return done(null, false); 
 					}
+					logger.info("User:"+ username+" logged in.")
 					return done(null, user);
 				})
 			});
@@ -168,12 +182,12 @@ function bootApplication(app) {
 	));
 
 	passport.serializeUser(function(user, done) {
-		console.log('serialize:', util.inspect(user))
+		//console.log('serialize:', util.inspect(user))
 		done(null, user);
 	});
 	
 	passport.deserializeUser(function(user, done) {
-		console.log('deserialize:', util.inspect(user))
+		//console.log('deserialize:', util.inspect(user))
 		//app.client.query('SELECT * FROM users where username='+user.username, function(err, user) {
 		//	console.log(user.rows[0])
 	  	//  done(null, user.rows[0]);

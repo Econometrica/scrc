@@ -14,7 +14,9 @@
   	"express-partials": "0.1.1",
     "eyes": "0.1.8",
     "passport": "0.1.17",
-	"passport-local": "0.1.6"
+	"passport-local": "0.1.6",
+	"winston":  "0.7.2",
+	"winston-papertrail": "0.1.4"
 	},
 
   "subdomain": "cappelaere-scrc",

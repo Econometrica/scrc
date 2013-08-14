@@ -153,16 +153,16 @@ var util	= require('util'),
 		fs.writeFileSync(fname, "id, site_id, drg_id, subpopulation_id, measure_id, year, quarter, value, upper_bound, lower_bound, episode_id, department_id\n")
 		
 		// generate quick stats for departments
-		console.log("generating quick stats...")
+		logger.info("generating quick stats...")
 		index = generate_quick_stats( fname, index )
 
-		console.log("generating measures data..."+  index)
+		logger.info("generating measures data..."+  index)
 		index = generate_measures_data( fname, index )
 
-		console.log("generating drgs data..." + index)
+		logger.info("generating drgs data..." + index)
 		index = generate_drgs_data( fname, index )
 		
-		console.log("Done:", index)
+		logger.info("Done:", index)
 		res.send("file:"+fname+" has been generated:"+index)
 	}
 };

@@ -81,7 +81,7 @@ module.exports = {
 	},
 	
 	index: function(req, res) {
-		eyes.inspect(req.headers, "headers")
+		//eyes.inspect(req.headers, "headers")
 		//eyes.inspect(req.user, "user")
 		async.parallel([
 			function(callback) {

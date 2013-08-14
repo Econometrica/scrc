@@ -6,11 +6,11 @@ module.exports = {
 	// login
 	index: function(req, res) {       
 		var requested_url = req.query['requested_url'];
-		console.log("login session:", util.inspect(req.session));
-		console.log("requested_url:", requested_url);
+		logger.info("login session:", util.inspect(req.session));
+		logger.info("requested_url:", requested_url);
 		
 		if( req.session ) {
-			console.log("setting requested_url")
+			logger.info("setting requested_url")
 			req.session.requested_url = requested_url;
 		} else {
 			//req.session = {
@@ -23,7 +23,7 @@ module.exports = {
 	},
 	// logout
 	logout: function(req, res) {
-		console.log("logged out!!!");
+		logger.info("logged out!!!");
 		req.logOut();
 		
 		res.redirect('/')

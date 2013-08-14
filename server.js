@@ -11,6 +11,7 @@ var express 		= require('express'),
 	Localtrategy 	= require('passport-local').Strategy,
 	//BasicStrategy 	= require('passport-http').BasicStrategy,
 	home			= require('./app/controllers/home'),
+	admin			= require('./app/controllers/admin'),
 	login			= require('./app/controllers/login'),
 	aspect			= require('./app/controllers/aspect'),
 	generator		= require('./app/controllers/generator'),
@@ -21,9 +22,6 @@ var app = module.exports = express();
 
 global.app 			= app;
 app.root 			= process.cwd();
-
-// we need to configure environment
-console.log(util.inspect(app.settings));
 
 var mainEnv 	= app.root + '/config/environment'+'.js';
 var supportEnv 	= app.root + '/config/environments/' + app.settings.env+'.js';
@@ -46,7 +44,7 @@ function auth(req, res, next) {
 	if (req.isAuthenticated()) { 
 		return next();
 	}
-	console.log("auth not authenticated... please login...")
+	logger.info("auth not authenticated... please login...")
 	res.redirect('/login')
 }
 
@@ -71,8 +69,10 @@ app.get('/site/bsdmp/:site_id/:drg_id/:m_id/:pop_id/:year/:quarter',
 app.get('/site/benchmarks/:id',					auth, aspect.benchmarks);
 app.post('/site/benchmark',						auth, aspect.benchmark);
 
-app.get('/contact', 							home.contact);
-app.get('/about', 								home.about);
+app.get('/contact', 							auth, home.contact);
+app.get('/about', 								auth, home.about);
+
+app.get('/admin',								auth, admin.index);
 
 app.get('/login', 								login.index);
 
@@ -85,22 +85,22 @@ app.post('/login/3',
 app.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
 	if (err) { 
-		console.log('Post login authenticate err:', err)
+		logger.info('Post login authenticate err:', err)
 		return next(err) 
 	}
 	
 	if (!user) {
-		console.log("Post login authenticate no user")
+		logger.info("Post login authenticate no user")
 		req.session.messages = [info.message];
 		return res.redirect('/login')
 	}
 	
 	req.logIn(user, function(err) {
 		if (err) { 
-			console.log("req login err:", err)
+			logger.info("req login err:", err)
 			return next(err);
 		}
-		console.log("req.login passed")
+		//logger.info("req.login passed")
 		return res.redirect('/');
     });
   })(req, res, next);
@@ -122,5 +122,5 @@ debug("trying to start on port:"+ app.get('port'));
 if (!module.parent) {
 	app.listen(app.get('port'));
 	
-	console.log( "**** "+app.config.application+' started on port:'+app.get('port'));
+	logger.info( "**** "+app.config.application+' started on port:'+app.get('port'));
 }
