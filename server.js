@@ -8,6 +8,7 @@ var express 		= require('express'),
 	fs				= require('fs'),
   	debug 			= require('debug')('server'),
 	passport 		= require('passport'),
+	eyes			= require('eyes'),
 	Localtrategy 	= require('passport-local').Strategy,
 	//BasicStrategy 	= require('passport-http').BasicStrategy,
 	home			= require('./app/controllers/home'),
@@ -15,6 +16,7 @@ var express 		= require('express'),
 	login			= require('./app/controllers/login'),
 	aspect			= require('./app/controllers/aspect'),
 	generator		= require('./app/controllers/generator'),
+	users			= require('./app/controllers/users'),
 	test			= require('./app/controllers/test');
 
 		
@@ -75,6 +77,16 @@ app.get('/about', 								auth, home.about);
 app.get('/admin',								auth, admin.index);
 
 app.get('/login', 								login.index);
+app.get('/login/forgot', 						login.forgot);
+app.get('/login/forget', 						login.forget);
+app.post('/login/reset', 						login.reset);
+
+app.get('/users', 								auth, users.list);
+app.get('/users/new', 							auth, users.form);
+app.get('/users/:id', 							auth, users.update);
+app.post('/users/:id', 							auth, users.submit);
+app.delete('/users/:id', 						auth, users.delete);
+app.post('/users', 								auth, users.create);
 
 app.post('/login/3',
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
@@ -91,7 +103,8 @@ app.post('/login', function(req, res, next) {
 	
 	if (!user) {
 		logger.info("Post login authenticate no user")
-		req.session.messages = [info.message];
+		eyes.inspect(info, "authenticate info")
+		//req.session.messages = [info.message];
 		return res.redirect('/login')
 	}
 	

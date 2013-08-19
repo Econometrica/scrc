@@ -3,18 +3,21 @@
 	<%- partial('site.ejs', {site: site})%>
 	
 	<div id="container" style="height: 500px; min-width: 900px"></div>
+	<a href='Javascript:void(0)' onclick="ShowTableData();">
+		<i class='icon-list'></i>&nbsp;Show Table Data</a><br/>
+	<div id="TableData"></div><br/>
 	
 	<br/>
 </div>	
 	
 <hr/>
+
+<!--
 <div class='container'>
 <div id="disqus_thread"></div>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 	<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
-
-<!-- DISQUS -->
 <script type="text/javascript">
 	var disqus_shortname = 'scrsproto';
 
@@ -24,14 +27,15 @@
 		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 	})();
 </script>
+-->
 
 <script src="/js/Highstock-1.3.4/js/highstock.js"></script>
 <script src="/js/Highstock-1.3.4/js/modules/exporting.js"></script>
 	
 <script type="text/javascript">
+var seriesOptions 	= [];
 	
 $(function() {
-		var seriesOptions 	= [],
 			yAxisOptions 	= [],
 			seriesCounter 	= 0,
 			names			= ['Ctrl Group 1', 'Ctrl Group 2', 'Ctrl Group 3', 'Current Measure']
@@ -198,6 +202,45 @@ $(function() {
 		}
 
 	});
+	
+	function ShowTableData() {
+		//console.log("ShowTableData");
+		console.log(seriesOptions);
+
+		if( $('#TableData').html()) {
+			$('#TableData').toggle();
+			return;
+		}
+
+		var str = "<br/><div class='dwell'><table class='table-striped'>";
+		str += "<th>Episode</th><th>Site</th><th>Value</th>";
+		str += "<tbody>";
+		for( var e in seriesOptions) {
+			var site = seriesOptions[e];
+			str += "<tr><td>" + site.name + "</td><td></td><td></td></tr>";
+
+			for( var d in site.data ) {
+				var data 	= site.data[d];
+				var time 	= new Date(data[0]);
+				var year 	= time.getFullYear();
+				var month	= time.getMonth();
+				var quarter;
+				if( month >= 10 ) {
+					quarter = 4;
+				} else if ( month >= 7 ) {
+					quarter = 3;
+				} else if( month >= 4 ) {
+					quarter = 2;
+				} else {
+					quarter = 1;
+				}
+				var value 	= data[1];
+				str += "<td></td><td>"+ year + " Q"+quarter +"</td><td align='right'>"+ value + "</td></tr>"
+			}
+		}
+		str += "</tbody></table></div>";
+		$('#TableData').html(str);
+	}
 	
 	analytics.track('Measure', {
 		measureId:		<%= measure.id %>,

@@ -12,12 +12,17 @@ var express 		= require('express'),
 	PGStore 		= require('connect-pg'),
 	ejs				= require('ejs'),
 	analytics 		= require('analytics-node'),
+	crypto 			= require('crypto'),
+	eyes			= require('eyes'),
+	SendGrid 		= require('sendgrid').SendGrid,
 	winston 		= require('winston');
 	
   	require('winston-papertrail').Papertrail;
 
   	global.logger = new winston.Logger({
     transports: [
+    	new (winston.transports.Console)(),
+
         new winston.transports.Papertrail({
             host: 'logs.papertrailapp.com',
             port: 12836,
@@ -30,36 +35,26 @@ var express 		= require('express'),
 	app.sessionSecret = process.env.COOKIEHASH || 'SCRC-PGC-2012-07';
 	
 	exports.boot = function(app){
-	   bootApplication(app)
+		bootApplication(app)
+
+		// The port that this express app will listen on
+		debug("app_port:"+app_port)
+
+		var port, hostBaseUrl
+
+		if( app.settings.env === 'development') {
+			port 			= app_port;
+			hostBaseUrl 	= 'http://localhost:' + port;
+		} else {
+			hostBaseUrl 	= app.config.HOSTBASEURL;
+			port 			= app.config.PORT;		
+		}
+
+		app.set('hostBaseUrl', hostBaseUrl)
+		app.set('port', port)
+		logger.info("hostBaseUrl:", hostBaseUrl, " port:", port)
+		analytics.init({ secret: app.sessionSecret });
 	}
-
-	// load env settings
-		
-	// not using Nodejitsu
-	//app.jitsu = JSON.parse(fs.readFileSync("./jitsu.env"));
-
-	// The port that this express app will listen on
-	debug("app_port:"+app_port)
-	
-	var port, hostBaseUrl
-	
-	if( app.settings.env === 'development') {
-		port 			= app_port;
-		hostBaseUrl 	= 'http://localhost:' + port;
-	} else {
-		hostBaseUrl 	= app.config.HOSTBASEURL;
-		port 			= app.config.PORT;		
-	}
-
-	app.set('hostBaseUrl', hostBaseUrl)
-	app.set('port', port)
-		
-
-	analytics.init({ secret: app.sessionSecret });
-
-// =========================================
-// settings
-
 	
 // ===========================
 // App settings and middleware
@@ -67,7 +62,6 @@ function bootApplication(app) {
 
 	// load config
 	app.config = JSON.parse(fs.readFileSync("./config/config.yaml"));
-
 	
 	// define a custom res.message() method
 	// which stores messages in the session
@@ -135,7 +129,7 @@ function bootApplication(app) {
 	    if(err) {
 	      return console.error('error running query', err);
 	    }
-	    logger.info("postgres time:", result.rows[0].theTime);
+	    logger.info("startup time: " + result.rows[0].theTime);
 	    //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
 	    //
 	  });
@@ -166,11 +160,14 @@ function bootApplication(app) {
 						logger.info("user not found:", user, err)
 						return done(err); 
 					}
+					
 					if (!user) {
 						logger.info("Undefined user returned by findByUsername")
 						return done(null, false); 
 					}
-					if (user.password != password) { 
+					
+					var md5 = crypto.createHash('md5').update(password+app.secret).digest("hex");
+					if (user.md5 != md5) { 
 						logger.info("User password mismatched")
 						return done(null, false); 
 					}
@@ -239,5 +236,20 @@ function bootApplication(app) {
 	app.use(function(req, res, next){
 	  res.status(404).render('404', { url: req.originalUrl })
 	})
+	
+	
+	var SENDGRID_USER 		= process.env.SENDGRID_USER;
+	var SENDGRID_PASSWORD	= process.env.SENDGRID_PASSWORD;
+	app.sendgrid  = require('sendgrid')(SENDGRID_USER, SENDGRID_PASSWORD);
+	if ( app.config.sendgrid ) app.sendgrid.send({
+	  to: app.config.contact_mail,
+	  from: 'pat@cappelaere.com',
+	  subject: 'SCRS startup ',
+	  text: 'SCRS startup email through SendGrid'
+	}, function(success, message) {
+		if (!success) {
+	    	logger.info(message);
+		} 
+	});
 }
  

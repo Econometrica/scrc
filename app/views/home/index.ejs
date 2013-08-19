@@ -10,7 +10,7 @@
 
 <script>
 var map = L.mapbox.map('map', 'examples.map-20v6611k')
-    .setView([40, -74.5], 8);
+    .setView([<%=latitude%>, <%=longitude%>], <%= zoom %>);
 
 	var geojson = <%- JSON.stringify(geojson) %>
 	var user    = <%- JSON.stringify(user) %>
@@ -21,10 +21,10 @@ var map = L.mapbox.map('map', 'examples.map-20v6611k')
 		        feature = marker.feature;
 			
 			// Create custom popup content
-			var popupContent =  "<table><tr><td><img src='"+feature.properties.image+"' width='64' /></td>" +
+			var popupContent =  "<img src='"+feature.properties.image+"' width='200' /><br/>" +
 								'<td><table><tr><h4>' + feature.properties.title + '</h4></tr>' +
-								"<tr>"+feature.properties.address+"</tr>" +
-								"<tr><a href='"+feature.properties.website+"'>website</a></tr></table></td></tr></table>"
+								"<tr>"+feature.properties.address+"<br/></tr>" +
+								"<tr><a href='"+feature.properties.website+"'>website</a></tr></table>"
 								
 			if( user.site_id == 0 || user.site_id == feature.properties.id ) {
 				popupContent +=	"<hr/>" +

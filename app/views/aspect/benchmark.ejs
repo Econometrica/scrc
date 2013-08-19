@@ -3,39 +3,41 @@
 
 	<h3>Benchmark Chart</h3>
 	
-	<h4>DRG: <%= drg.name %></h4>
-	<% if(drg.description) {%>
-	<%= drg.description %>
-	<%}%>
-	Subpopulation: <%= subpopulation.name %>
-	<br/>
 	<div class='well'>
-		<h4>Period: <%= year %> Q<%= quarter %></h4>
-	</div>
-		
+		<table>
+			<tr><td><b>DRG:</b></td><td><%= drg.name %></td>
+			<% if(drg.description) {%>
+			<td><%= drg.description %></td>
+			<%}%>
+			</tr>
+			<tr><td><b>Subpopulation:</b></td><td><%= subpopulation.name %></td></tr>
+			<tr><td><b>Period:</b></td><td><%= year %> Q<%= quarter %></td></tr>
+			
+			<tr><td><b>Measure:</b></td><td>
+			<select id='select_measure' >
+				<% for( m in measures ) { %>
+				<option value='<%= m %>'> <%= measures[m].name %> </option>
+				<%}%>
+			</select>
+			</td></tr>
+		</table>
+	</div>	
 	<hr/>
 	
-	<table>
-		<tr>
-			<td><div id="container1" style="height: 600px; min-width: 600px"></div></td>
-			<td><div id="container2" style="height: 600px; min-width: 600px"></div></td>
-		</tr>
-		<tr>
-			<td><div id="container3" style="height: 600px; min-width: 600px"></div></td>
-			<td><div id="container4" style="height: 600px; min-width: 600px"></div></td>
-		</tr>
-	</table>
+	<div id="container1" style="height: 600px; min-width: 600px"></div><br/>
+	<a href='Javascript:void(0)' onclick="ShowTableData();"><i class='icon-list'></i>&nbsp;Show Table Data</a><br/>
+	<div id="TableData"></div><br/>
+	
 </div>
 
+<!--
 <hr/>
-
 <div class='container'>
 <div id="disqus_thread"></div>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 	<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
 
-<!-- DISQUS -->
 <script type="text/javascript">
 	var disqus_shortname = 'scrsproto';
 
@@ -45,7 +47,7 @@
 		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 	})();
 </script>
-
+-->
 <script src="/js/Highstock-1.3.4/js/highstock.js"></script>
 <script src="/js/Highstock-1.3.4/js/modules/exporting.js"></script>
 	
@@ -54,10 +56,12 @@ var sites;
 var graphs 		= [{}, {}, {}, {}];
 var categories 	= [];				// really the site names
 
-var sites = <%- JSON.stringify(sites) %>;
+var sites 		= <%- JSON.stringify(sites) %>;
+var measures 	= <%- JSON.stringify(measures) %>;
+var g;
 
 function GraphMeasure(index, measure, callback ) {
-	var g = graphs[index];
+	g = graphs[index];
 			
 	var query = '<%= host %>/site/bsdmp/<%= site.id %>/<%= drg.id %>/'
 	query += measure.measure_id+'/<%= subpopulation.id %>/<%= year %>/<%= quarter %>';
@@ -88,7 +92,8 @@ function GraphMeasure(index, measure, callback ) {
 		
 		//console.log('createChart in container:'+container);
 		
-		$('#'+container).highcharts( {
+		//$('#'+container).highcharts( {
+		var chart1 = new Highcharts.Chart({
 			chart: {
 				renderTo: container,
 				alignTicks: true,
@@ -114,7 +119,7 @@ function GraphMeasure(index, measure, callback ) {
 				text: measure.description,
 				style: {
 					fontSize: '9px',
-					width: '200px'
+					width:    '200px'
 				},
 				verticalAlign: 'bottom'
 			},
@@ -157,16 +162,23 @@ function GraphMeasure(index, measure, callback ) {
 			},
 			plotOptions: {
 				column: {
-					stacking: 'normal'
+					stacking: 'normal',
+					pointWidth: 10
 					//,dataLabels: {
 					//	enabled: true,
 					//	color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
 					//}
 				}
+				//series: {
+			    //            borderWidth: 2,
+			    //            borderColor: 'black'
+			    //        }
 			},
 
 			series: seriesOptions
 		});
+		
+		//chart1.series
 		// done
 		if( callback) { callback(null); }
 	}
@@ -188,14 +200,45 @@ function findSite( i) {
 }
 
 $(function() {
-	var measures 	= <%- JSON.stringify(measures) %>;
-	sites			= <%- JSON.stringify(sites) %>; 
+	//var measures 	= <%- JSON.stringify(measures) %>;
+	
+	GraphMeasure(0, measures[0], function(err) {});
+//}
+})
 
-	for( m in measures ) {
-			//console.log("doing graph:",m);
-			GraphMeasure(m, measures[m], function(err) {
-		});
+function ShowTableData() {
+	//console.log("ShowTableData");
+	//console.log(g.seriesOptions);
+	
+	if( $('#TableData').html()) {
+		$('#TableData').toggle();
+		return;
 	}
+
+	var str = "<br/><div class='dwell'><table class='table-striped'>";
+	str += "<th>Episode</th><th>Site</th><th>Value</th>";
+	str += "<tbody>";
+	for( var e in g.seriesOptions) {
+		var episode = g.seriesOptions[e];
+		str += "<tr><td>" + episode.name + "</td><td></td><td></td></tr>";
+		
+		for( var d in episode.data ) {
+			var data = episode.data[d];
+			str += "<td></td><td>"+ data.x +"</td><td>"+ data.y + "</td></tr>"
+		}
+	}
+	str += "</tbody></table></div>";
+	$('#TableData').html(str);
+}
+
+$('#select_measure').change( function() {
+	//var measures 	= <%- JSON.stringify(measures) %>;
+
+	var selected = $('#select_measure option:selected').each( function() {
+		//var m = $(this).text();
+		var v = $(this).val();
+		GraphMeasure(0, measures[v], function(err) {});
+	})
 })
 
 analytics.track('DRG Benchmark Chart', {

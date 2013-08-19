@@ -1,0 +1,49 @@
+<div class='container'>
+<h2>User Profile Information</h2>
+	<div class='dwell'>
+		<form action='/users/<%= site_user.id %>' method='POST' >
+			<table class='table'>
+				<tr>
+					<td>User Id</td><td><%= site_user.id %>
+					<input type='hidden' name='id' value='<%= site_user.id %>'/></td>
+				</tr>
+				<tr>
+					<td>Username</td>
+					<td><%= site_user.username %>
+					<input type='hidden' name='username' value='<%= site_user.username %>'/></td>
+				</tr>
+				<tr>
+					<td>Email Address</td>
+					<td><input name='email' value='<%= site_user.email %>'/></td>
+				</tr>
+				
+				<% if(user.site_id == 0 ) { %>
+				<tr>
+					<td>site id</td>
+					<td><input name='site_id' value='<%= site_user.site_id %>'/></td>
+				</tr>
+				<%}%>
+				
+				<tr>
+					<td>Change password?</td>
+					<td><input id='password' name='password' value=''/>&nbsp; <a href='#' onclick='fillIt();'><i class='icon-pencil'></i>randomize</a></td>
+				</tr>
+
+			</table>
+			<input type='submit' class='btn btn-primary' name='submit' value="Submit"/> <br/><br/>
+		</form>
+	</div>
+	
+	
+</div>
+<script>
+function make_passwd(n, a) {
+  var index = (Math.random() * (a.length - 1)).toFixed(0);
+  return n > 0 ? a[index] + make_passwd(n - 1, a) : '';
+};
+
+function fillIt() {
+	var password 	= make_passwd(8, 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890');
+	$('#password').val(password);
+}
+</script>

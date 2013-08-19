@@ -15,7 +15,7 @@
 		</select>
 			
 		<label for="tags">Enter DRG code or text: </label>
-		<input id="tags" name='drg' style="width:600px" />
+		<input id="tags" name='drg' style="width:800px" />
 		<input type='hidden' id='site' name='site' value='<%= site.id %>' /><br/>
 		<button type="button" class="btn btn-primary" onclick="formSubmit()">Submit</button>		
 		</div>
@@ -34,7 +34,8 @@ $(function() {
 	var availableTags 	= [];
 	for( var i in drgs ) {
 		var drg = drgs[i]
-		var str = drg.id + " " + drg.name
+		var str = drg.id + " BASE-DRG " + drg.name;
+	
 		availableTags.push(str)
 	}
 	

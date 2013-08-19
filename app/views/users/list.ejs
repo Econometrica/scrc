@@ -1,0 +1,49 @@
+<div class='container'>
+<a href='/users/new'><i class="icon-user"></i>&nbsp;New User</a>
+<br/> 
+</div>
+
+<div class='container'>
+<h2>Users</h2>
+
+  <table class='table'>
+	<th>id</th>
+	<th>username</th>
+	<th>email</th>
+	<th>site_id</th>
+	<th>actions</th>
+	
+	<% for( u in users) { %>
+	<tr>
+		<td><%= users[u].id %></td>
+		<td><%= users[u].username %></td>
+		<td><%= users[u].email %></td>
+		<td><%= users[u].site_id %></td>
+		<td>
+			<a href='/users/<%= users[u].id %>'><i class="icon-edit"></i></a>
+			<i class="icon-remove-sign" 
+				onclick="bootbox.confirm('Are you sure you want to delete <%= users[u].username %>?', 
+				function(result) {
+					if(result) {
+						$.ajax({  
+						        url: '/users/<%= users[u].id %>',
+						        type: 'POST',  
+						        data: { 
+						            _method: 'DELETE'
+						        },  
+						        success: function (res) {  
+									window.location.reload();
+						        }, 
+						        error: function (res) {  
+						            alert(res);
+						        } 
+						    });
+					}
+				});"></i>
+		
+		</td>
+	</tr>
+	<%}%>
+  </table>
+</div>
+

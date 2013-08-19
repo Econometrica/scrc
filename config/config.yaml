@@ -1,11 +1,11 @@
 {
     "application":      "SCRC",
     "copyright":        "&copy; Vightel, 2013",
-    "contact":          "Pat Cappelaere",
+    "contact":          "Johnathan Crane",
     "contact_mail":     "pat@cappelaere.com",
-    
-    "HOSTBASEURL":      "http://scrc.geobliki.com",
-    "PORT":				80
+    "HOSTBASEURL":      "http://scrc.ecomoetricainc.com",
+    "PORT":				80,
+    "sendgrid":         false
 	
 }
 

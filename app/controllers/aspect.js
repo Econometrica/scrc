@@ -108,7 +108,12 @@ function getDrg(id, fn ) {
 	var query = "SELECT * from drgs where id="+id
 	logger.info(query) 
 	app.client.query(query, function(err, result) {
-		fn(err, result.rows[0])
+		console.log(err)
+		if( !err && result.rows) {
+			fn(err, result.rows[0])
+		} else {
+			fn(err, null)
+		}
 	})
 }
 
@@ -167,6 +172,7 @@ function get_sdsm( site_id, drg_id, subpop_id, measure_id, fn) {
 	query += " and drg_id="+drg_id
 	query += " and subpopulation_id="+subpop_id
 	query += " and measure_id="+measure_id
+	query += " and episode_id=0"
 	
 	logger.info(query) 
 	app.client.query(query, function(err, result) {
@@ -319,7 +325,7 @@ module.exports = {
 	// generates JSON data for that site ,drg, subpop, measure
 	//
 	sdsm: function(req, res) {
-		eyes.inspect(req.query, "sdsm query");
+		//eyes.inspect(req.query, "sdsm query");
 		
 		var site_id 	= req.query['site']
 		var drg_id 		= req.query['drg']
@@ -520,7 +526,7 @@ module.exports = {
 			},
 			function(callback) {
 				getSubpopulations( function(err, result ) {
-					eyes.inspect(result, "subpop")
+					//eyes.inspect(result, "subpop")
 					callback(null, result)
 				})
 			},
@@ -552,7 +558,7 @@ module.exports = {
 			},
 			function(callback) {
 				getYears( function(err, result ) {	
-					eyes.inspect(result, "years")				
+					//eyes.inspect(result, "years")				
 					callback(null, result)
 				})
 			},
@@ -598,16 +604,28 @@ module.exports = {
 		
 			for( var i in results ) {
 				var r = results[i]
-				var serie = series[r.episode_id-1]
-				serie.data.push( r.value )
+				
+				if( r.site_id == site_id ) {
+					var x = site_id
+					var y = r.value;
+					r.value = { x: x, y: y, borderWidth:'3', borderColor: 'black' }
+				} else {
+					var x = r.site_id
+					var y = r.value;
+					r.value = { x: x, y: y }
+					
+				}
+				
+				series[r.episode_id-1].data.push( r.value )
 			}
 			return series
 		}
 		
 		get_benchmark_sdsm( site_id, drg_id, pop_id, m_id, year, quarter, function(err, results) {
 			// reformat
+			//eyes.inspect(results, "sdmp results")
 			var data = reformat(results)
-			//eyes.inspect(data)
+			//eyes.inspect(data, "sdmp data")
 			res.send( data )
 		})
 	},

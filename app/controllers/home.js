@@ -49,7 +49,7 @@ function getSitesGeoJSON( user, fn ) {
 						"website": row.website,
 						"address": row.address,
 						"id": row.id,
-						"image": row.image,
+						"image": '/img/logos/'+row.id+".jpg",		//row.image,
 						"icon": {
 							//"iconUrl": "img/"+icons[row.ownership_id],
 							"iconUrl": iconUrl,
@@ -83,9 +83,31 @@ module.exports = {
 	index: function(req, res) {
 		//eyes.inspect(req.headers, "headers")
 		//eyes.inspect(req.user, "user")
+		var user = req.user;
+		var latitude, longitude, zoom;
+		
+		if( user.site_id == 0 ) {
+			latitude 	= 37.0
+			longitude 	= -99.0
+			zoom 		= 4
+		} else {
+			zoom = 8
+		}
+		
 		async.parallel([
 			function(callback) {
 				getSitesGeoJSON( req.user, function(err, result ) {
+					//eyes.inspect(result, "result")
+					if( user.site_id != 0 ) {
+						for( r in result.features ) {
+							if( result.features[r].properties.id === user.site_id ) {
+								var coordinates = result.features[r].geometry.coordinates
+								latitude 	= coordinates[1]
+								longitude	= coordinates[0]
+								break
+							}
+						}
+					}
 					callback(err, result)
 				})
 			},
@@ -103,7 +125,10 @@ module.exports = {
 					{ 	layout: "layout.ejs",
 						geojson: results[0],
 						summary: results[1].summary,
-						user: 	 req.user });
+						user: 	 req.user,
+						latitude: latitude,
+						longitude: longitude,
+						zoom: zoom });
 		})
 	}
 };
