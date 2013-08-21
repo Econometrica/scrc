@@ -18,6 +18,7 @@ var express 		= require('express'),
 	generator		= require('./app/controllers/generator'),
 	users			= require('./app/controllers/users'),
 	help			= require('./app/controllers/help'),
+	report			= require('./app/controllers/report'),
 	test			= require('./app/controllers/test');
 
 		
@@ -90,6 +91,9 @@ app.delete('/users/:id', 						auth, users.delete);
 app.post('/users', 								auth, users.create);
 
 app.get('/help', 								auth, help.index);
+app.get('/report', 								auth, report.index);
+app.get('/report/fix', 							auth, report.fix);
+app.get('/report/test', 						auth, report.test);
 
 app.post('/login/3',
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
