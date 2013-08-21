@@ -28,10 +28,10 @@
 		    	<% } %>
 			</select>
 			
-			<label for="tags">Enter DRG code or text: </label>
+			<label for="tags">Enter <a href='/help#BASE-DRG'>BASE-DRG</a> (auto-complete): </label>
 			<input id="tags" name='drg' style="width:600px" />
 			<input type='hidden' id='site' name='site' value='<%= site.id %>' /><br/>
-			<button type="button" class="btn btn-primary" onclick="formSubmit()">Submit</button>		
+			<button id='submitButton' type="button" class="btn btn-primary" onclick="formSubmit()">Submit</button>		
 		</div>
 	</form>
 	
@@ -40,22 +40,61 @@
 	
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
- <script>
+
+<script>
 function formSubmit() {
-	document.getElementById("drgForm").submit();
+	if( $('#tags').val()) {
+		$("#drgForm").submit();
+	} else {
+		$('#submitButton').attr("disabled","disabled");
+	}
 }
 
+var drgs 			= <%- JSON.stringify(drgs) %>
+var availableTags 	= [];
+
 $(function() {
-	var drgs 			= <%- JSON.stringify(drgs) %>
-	var availableTags 	= [];
 	for( var i in drgs ) {
 		var drg = drgs[i]
-		var str = drg.id + " " + drg.name
+		var str = drg.id + " BASE-DRG " + drg.name
 		availableTags.push(str)
 	}
 
 	$( "#tags" ).autocomplete({
 		source: availableTags
 	});
+	
+	$('#tags').on("autocompleteresponse", function(event, ui) {
+		if( $('#tags').val()) {
+			console.log("enable");
+			$('#submitButton').removeAttr("disabled");
+		} else {
+			console.log("no value");
+			$('#submitButton').attr("disabled","disabled");
+		}	
+	});
 });
+
+var sel_drg 	= <%= sel_drg %>;
+var sel_subpop	= <%= sel_subpop %>;
+var sel_year	= <%= sel_year %>;
+var sel_quarter	= <%= sel_quarter %>;
+
+if( sel_drg >= 0) {
+	var drg = drgs[sel_drg]
+	var str = drg.id + " BASE-DRG " + drg.name;
+	$('#tags').val( str);
+	$('#submitButton').removeAttr("disabled");
+} else {
+	$('#submitButton').attr("disabled","disabled");
+}
+if( sel_subpop >= 0 ) {
+	$('#subpop').val(sel_subpop);
+}
+if( sel_year >= 0 ) {
+	$('#year').val(sel_year);
+}
+if( sel_quarter >= 0 ) {
+	$('#quarter').val(sel_quarter);
+}
 </script>

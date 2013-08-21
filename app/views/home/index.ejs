@@ -1,5 +1,11 @@
 
-<div id='map'></div>
+<div class='container'>
+<div id='map' style='width:940px;height:400px;'></div>
+<br/>
+<a href='javascript:void(0)' onclick="ChangeState('NJ');">New Jersey</a>&nbsp;
+<a href='javascript:void(0)' onclick="ChangeState('FL');">Florida</a>&nbsp;
+<a href='javascript:void(0)' onclick="ChangeState('IL');">Illinois</a>&nbsp;
+</div>
 <br/>
 <div class='container'>
 	<div class='well'>
@@ -43,5 +49,18 @@ var map = L.mapbox.map('map', 'examples.map-20v6611k')
 	
 		// Add features to the map
 		map.markerLayer.setGeoJSON(geojson);
+		
+function ChangeState( state ) {
+	if( state == 'NJ' ) {
+		var latlng = new L.LatLng(40,-74);
+		map.setView(latlng, 7);
+	} else if( state == 'FL' ) {
+		var latlng = new L.LatLng(28,-84);
+		map.setView(latlng, 6);
+	} else if( state == 'IL' ) {
+		var latlng = new L.LatLng(40,-89);
+		map.setView(latlng, 6);
+	};
+};
 </script>
 	

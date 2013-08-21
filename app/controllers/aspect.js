@@ -231,6 +231,17 @@ function getDomains( fn ) {
 	})
 }
 
+//
+// Retrieve all departments
+//
+function getDepartments( fn ) {
+	var query = "SELECT * from departments where id>0"
+	logger.info(query) 
+	app.client.query(query, function(err, result) {
+		fn(err, result.rows)
+	})
+}
+
 module.exports = {
 	// display transitions of care for particualr site
 	transitions: function(req, res) {
@@ -240,12 +251,23 @@ module.exports = {
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
 		logger.info('transitions', id)
-		getSite(id, function(err, result ) {
-			res.render( 'aspect/transitions.ejs', {
-				layout: 'layout.ejs', 
-				user: user,
-				site: result});	
-		})
+		async.parallel([
+			function(callback) {	
+				getSite(id, function(err, result ) {
+					callback( err, result);	
+				})
+			},
+			function(callback) {	
+				getDepartments( function(err, result ) {
+					callback( err, result);	
+				})
+			}], function(err, results) {
+					res.render( 'aspect/transitions.ejs', {
+						layout: 'layout.ejs', 
+						user: user,
+						site: results[0],
+						departments: results[1]});
+			});
 	},
 	
 	// get transitions of care for specific site and department
@@ -511,6 +533,14 @@ module.exports = {
 		var user 	= req.user
 		logger.info('drgs', id)
 		
+		var sel_drg 	= -1;
+		var sel_subpop 	= -1;
+		if( req.query ) {
+		 	sel_drg = req.query['drg']
+			sel_subpop = req.query['subpop']
+			console.log(sel_drg, sel_subpop)
+		}
+			
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
 		
 		async.parallel([
@@ -536,7 +566,9 @@ module.exports = {
 					site: 			results[0],
 					drgs: 			results[1],
 					subpopulations: results[2],
-					user: 			user
+					user: 			user,
+					sel_drg: 		sel_drg,
+					sel_subpop: 	sel_subpop
 				});	
 		})
 	},
@@ -549,6 +581,18 @@ module.exports = {
 		logger.info('benchmarks', id)
 		
 		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
+
+		var sel_drg 	= -1;
+		var sel_subpop 	= -1;
+		var sel_year	= -1;
+		var sel_quarter	= -1;
+		
+		if( req.query ) {
+		 	sel_drg 	= req.query['drg']
+			sel_subpop = req.query['subpop']
+			sel_year 	= req.query['year']
+			sel_quarter = req.query['quarter']
+		}
 		
 		async.parallel([
 			function(callback) {
@@ -580,6 +624,10 @@ module.exports = {
 					drgs: 			results[2],
 					subpopulations: results[3],
 					user: 			user,
+					sel_year: 		sel_year,
+					sel_quarter: 	sel_quarter,
+					sel_drg: 		sel_drg,
+					sel_subpop: 	sel_subpop
 				});	
 		})
 	},

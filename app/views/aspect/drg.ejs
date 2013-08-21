@@ -21,6 +21,7 @@
 			</td></tr>
 		</table>
 	</div>	
+	<b>Change:</b> <a href='/'>Site</a>&nbsp;/&nbsp; <a href='/site/drgs/<%=site.id%>?drg=<%=drg.id%>&subpop=<%=subpop.id%>'>DRG</a>&nbsp;/&nbsp;<a href='/site/drgs/<%=site.id%>?drg=<%=drg.id%>&subpop=<%=subpop.id%>'>SubPopulation</a>&nbsp; 
 	<hr/>
 	
 	<div id="container1" style="height: 600px; min-width: 600px"></div>
@@ -58,7 +59,8 @@ var colors 		= Highcharts.getOptions().colors;
 
 var measures 	= <%- JSON.stringify(measures) %>;
 var g;
-	
+
+
 function GraphMeasure(index, measure, callback ) {
 	g 					= graphs[index];
 	

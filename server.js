@@ -17,6 +17,7 @@ var express 		= require('express'),
 	aspect			= require('./app/controllers/aspect'),
 	generator		= require('./app/controllers/generator'),
 	users			= require('./app/controllers/users'),
+	help			= require('./app/controllers/help'),
 	test			= require('./app/controllers/test');
 
 		
@@ -87,6 +88,8 @@ app.get('/users/:id', 							auth, users.update);
 app.post('/users/:id', 							auth, users.submit);
 app.delete('/users/:id', 						auth, users.delete);
 app.post('/users', 								auth, users.create);
+
+app.get('/help', 								auth, help.index);
 
 app.post('/login/3',
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
