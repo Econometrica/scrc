@@ -110,7 +110,12 @@ module.exports = {
 						}
 					}
 					result.features = result.features.sort( function(a,b) { 
-						return b.properties.rank - a.properties.rank; })
+						if (a.properties.title > b.properties.title)
+						      return 1;
+						if (a.properties.title < b.properties.title)
+						      return -1;
+						// a must be equal to b
+						return 0; })
 					callback(err, result)
 				})
 			},

@@ -45,7 +45,7 @@ $(function() {
 		$.each(sites, function(i, name) {
 			$.getJSON('/site/measure/'+ <%= measure.id %> +'/'+ name, function(data) {
 					var type = 'line';
-					if( i == 0) type='column';
+					if( i == 3) type='column';
 					seriesOptions[i] = {
 					name: names[i],
 					data: data,

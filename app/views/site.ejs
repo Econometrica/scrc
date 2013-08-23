@@ -5,5 +5,13 @@
 		<tr><td><%= site.address %></td></tr>
 		<tr><td><a href='<%= site.website %>'>website</a></td></tr>
 	</table>
+	
+	<small>
+		<a href='/site/transitions/<%= site.id %>'>Transitions</a>&nbsp;/
+		<a href='/site/measures/<%= site.id %>'>Measures</a>&nbsp;/
+		<a href='/site/drgs/<%= site.id %>'>Runs</a>&nbsp;/
+		<a href='/site/benchmarks/<%= site.id %>' title='current rank'>Benchmarks</a>&nbsp;
+	</small>
+	
 </div>	
 <hr/>
