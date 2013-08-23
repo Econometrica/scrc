@@ -1,3 +1,9 @@
+<style>
+	.help {
+	  cursor: help;
+	}
+</style>
+
 <div class='container'>
 	<%- partial('site.ejs', {site: site})%>
 
@@ -14,7 +20,7 @@
 	    	<% } %>
 		</select>
 			
-		<label for="tags">Enter <a href='/help#BASE-DRG'>BASE-DRG</a> (auto-complete): </label>
+		<label for="tags">Enter <a class='help' href='/help#BASE-DRG'>BASE-DRG</a> (auto-complete): </label>
 		<input id="tags" name='drg' style="width:800px" />
 		<input type='hidden' id='site' name='site' value='<%= site.id %>' /><br/>
 		<button id='submitButton' type="button" class="btn btn-primary" onclick="formSubmit()">Submit</button>		

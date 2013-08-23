@@ -48,7 +48,9 @@ function getSitesGeoJSON( user, fn ) {
 						"title": row.name,
 						"website": row.website,
 						"address": row.address,
+						"state": row.state,
 						"id": row.id,
+						"rank": parseInt(Math.random()*100),
 						"image": '/img/logos/'+row.id+".jpg",		//row.image,
 						"icon": {
 							//"iconUrl": "img/"+icons[row.ownership_id],
@@ -97,7 +99,6 @@ module.exports = {
 		async.parallel([
 			function(callback) {
 				getSitesGeoJSON( req.user, function(err, result ) {
-					//eyes.inspect(result, "result")
 					if( user.site_id != 0 ) {
 						for( r in result.features ) {
 							if( result.features[r].properties.id === user.site_id ) {
@@ -108,19 +109,17 @@ module.exports = {
 							}
 						}
 					}
+					result.features = result.features.sort( function(a,b) { 
+						return b.properties.rank - a.properties.rank; })
 					callback(err, result)
 				})
 			},
 			function(callback) {
 				getSummary( req.user.site_id, function(err, result ) {
-					//eyes.inspect(result, "summary")
 					callback(err, result)
 				})
 			},
 		], function(err, results) {
-				//eyes.inspect(results[0], "sites")
-				//eyes.inspect(results[1], "summary")
-				
 				res.render( 'home/index.ejs', 
 					{ 	layout: "layout.ejs",
 						geojson: results[0],

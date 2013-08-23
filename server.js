@@ -95,11 +95,13 @@ app.get('/report', 								auth, report.index);
 app.get('/report/fix', 							auth, report.fix);
 app.get('/report/test', 						auth, report.test);
 
-app.post('/login/3',
-  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
-  function(req, res) {
-    res.redirect('/');
-  });
+app.get('/test/:id', 							test.index);
+
+//app.post('/login/3',
+//  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+//  function(req, res) {
+//    res.redirect('/');
+//});
 
 app.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {

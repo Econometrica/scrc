@@ -1,25 +1,63 @@
+<style>
+.table-scrollable { height: 500px; overflow: auto; }
+</style>
 
-<div class='container'>
-<div id='map' style='width:940px;height:400px;'></div>
-<br/>
-<a href='javascript:void(0)' onclick="ChangeState('NJ');">New Jersey</a>&nbsp;
-<a href='javascript:void(0)' onclick="ChangeState('FL');">Florida</a>&nbsp;
-<a href='javascript:void(0)' onclick="ChangeState('IL');">Illinois</a>&nbsp;
-</div>
-<br/>
-<div class='container'>
-	<div class='well'>
-<h4>Summary of Progress</h4>
-	<%- summary %>
+<div class="container-fluid">
+	<div class='row-fluid'>
+		<a href='/report'>Ranked Sites Report With Current Score:</a><br/><br/>
+		<div class='span4 table-scrollable'>
+			<table id='site-list' class='table table-condensed table-hover ' >
+			<% for( var s in geojson.features) { %>
+				<tr><td onclick="selectList(<%= geojson.features[s].properties.id %>)">
+					<b><%= geojson.features[s].properties.title %></b>&nbsp;
+					<a href='#' class="text-warning">(<%= geojson.features[s].properties.rank %>)</a><br/>
+					<%= geojson.features[s].properties.address %>&nbsp;<%= geojson.features[s].properties.state %><br/>
+					
+					<% if(user.site_id == 0 || user.site_id == geojson.features[s].properties.id){ %> 
+					<small>
+					<a href='/site/transitions/<%= geojson.features[s].properties.id %>'>Transitions</a>&nbsp;
+					<a href='/site/measures/<%= geojson.features[s].properties.id %>'>Measures</a>&nbsp;
+					<a href='/site/drgs/<%= geojson.features[s].properties.id %>'>Runs</a>&nbsp;
+					<a href='/site/benchmarks/<%= geojson.features[s].properties.id %>' title='current rank'>Benchmarks</a>&nbsp;
+					</small>
+					<% } %> 
+					
+				</td></tr>
+			<% } %>			
+			</table>
+		</div>
+		
+		<div class='span4'>
+		 	<div id='map' style="width:700px;height:500px;"></div>
+			<a href='javascript:void(0)' onclick="ChangeState('NJ');">New Jersey</a>&nbsp;
+			<a href='javascript:void(0)' onclick="ChangeState('FL');">Florida</a>&nbsp;
+			<a href='javascript:void(0)' onclick="ChangeState('IL');">Illinois</a>&nbsp;
+			</div>
+			<br/>
+		</div>
+	</div>
+	<hr/>
+	<div class="row-fluid">
+		<div class='container'>
+			<div class='well'>
+				<h4>Summary of Progress</h4>
+				<%- summary %>
+			</div>
+		</div>
 	</div>
 </div>
 
+
+
+
 <script>
+var geojson = <%- JSON.stringify(geojson) %>
+
 var map = L.mapbox.map('map', 'examples.map-20v6611k')
     .setView([<%=latitude%>, <%=longitude%>], <%= zoom %>);
 
-	var geojson = <%- JSON.stringify(geojson) %>
 	var user    = <%- JSON.stringify(user) %>
+	var popup	= L.popup;
 	
 		// Set a custom icon on each marker based on feature properties
 		map.markerLayer.on('layeradd', function(e) {
@@ -45,6 +83,13 @@ var map = L.mapbox.map('map', 'examples.map-20v6611k')
 		        minWidth: 320
 		    });
 		    marker.setIcon(L.icon(feature.properties.icon));
+			for( var s in geojson.features ) {
+				var site = geojson.features[s]
+				if( site.properties.id == feature.properties.id) {
+					site.marker = marker;
+					break;
+				}
+			}
 		});
 	
 		// Add features to the map
@@ -62,5 +107,22 @@ function ChangeState( state ) {
 		map.setView(latlng, 6);
 	};
 };
+
+function selectList(id) {
+	//alert("Selected:"+id);
+	console.log("id:"+id)
+	for( var s in geojson.features ) {
+		var site = geojson.features[s]
+		if( site.properties.id == id ) {
+			console.log("point:"+ site.geometry.coordinates[1] + "," + site.geometry.coordinates[0])
+			var latlng = new L.LatLng(40.2, -74.0);
+			//map.fireEvent('click', { 
+			//	latlng: L.LatLng(40.2, -74.0)
+			//});
+			//popup.setLatLng( latlng ).setContent("You selected this one").openOn(map)
+			site.marker.fire('click');
+		}
+	}
+}
 </script>
 	
