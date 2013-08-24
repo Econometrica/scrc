@@ -1,0 +1,11 @@
+<div class='container'>
+	<h4>Available Reports</h4>
+	
+	<ul>
+	<% for( var f in files ) { %>
+		<li>
+			<a href='/pdfs/<%= files[f] %>'> <%= files[f] %> </a>
+		</li>
+	<%}%>
+	</ul>
+</div>

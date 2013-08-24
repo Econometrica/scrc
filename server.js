@@ -19,6 +19,7 @@ var express 		= require('express'),
 	users			= require('./app/controllers/users'),
 	help			= require('./app/controllers/help'),
 	report			= require('./app/controllers/report'),
+	pdfs			= require('./app/controllers/pdfs'),
 	test			= require('./app/controllers/test');
 
 		
@@ -94,6 +95,9 @@ app.get('/help', 								auth, help.index);
 app.get('/report', 								auth, report.index);
 app.get('/report/fix', 							auth, report.fix);
 app.get('/report/test', 						auth, report.test);
+
+app.get('/pdfs',		 						auth, pdfs.index);
+app.get('/pdfs/:site/:year/:id',		 		auth, pdfs.download);
 
 app.get('/test/:id', 							test.index);
 
