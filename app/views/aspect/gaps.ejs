@@ -1,0 +1,66 @@
+<script>
+function getStars(id) {
+	var score = parseInt(random()*5);
+	var str = "";
+	var i = 0;
+	//for( i=0; i<score; i++) {
+	//	str += "&lt;i class='icon-star'&gt;&lt;/i&gt;&nbsp;";
+	//}
+	return '*';
+}
+</script>
+
+<div class='container'>
+	<%- partial('site.ejs', {site: site})%>
+
+	<h4>Gap Bender</h4>
+	
+	<table class='table'>
+		<div class="accordion" id="accordion3">
+			<div class="accordion-group">
+			
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapse_1">
+					Quality of Care <i class='icon-star'></i>&nbsp;
+					</a>
+			    </div>
+				<div id="collapse_1" class="accordion-body collapse">
+					<div class="accordion-inner">
+						<div class='well well-large'>
+							<ul class='list-group'>
+				    		<li class='list-group-item'>
+							<a href='/site/measure/4?site=<%=site.id%>'>Mortality:</a><i class='icon-star'></i>&nbsp;
+							</li>
+							
+							<li class='list-group-item'>
+							<a href='/site/measure/6?site=<%=site.id%>'>Readmissions:</a>
+								<i class='icon-star'></i>&nbsp;<i class='icon-star'></i>&nbsp;
+							</li>
+							
+				    		<li class='list-group-item'>
+							<a href='/site/measure/11?site=<%=site.id%>'>Patient Survey:</a>
+								<i class='icon-star'></i>&nbsp;
+								<i class='icon-star'></i>&nbsp;
+							
+							</li>
+				    		
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapse_2">
+					Cost Management <i class='icon-star'></i>&nbsp;<i class='icon-star'></i>&nbsp;
+					</a>
+			    </div>
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapse_3">
+					Efficiency <i class='icon-star'></i>&nbsp;
+					</a>
+			    </div>
+				
+			  </div>
+		</div>
+	</table>
+</div>

@@ -96,6 +96,19 @@ module.exports = {
 			zoom = 8
 		}
 		
+		function sortAlpha(a,b) {
+			if (a.properties.title > b.properties.title)
+			      return 1;
+			if (a.properties.title < b.properties.title)
+			      return -1;
+			// a must be equal to b
+			return 0;
+		};
+		
+		function sortRank(a,b) {
+			 return a.properties.rank - b.properties.rank;
+		};
+		
 		async.parallel([
 			function(callback) {
 				getSitesGeoJSON( req.user, function(err, result ) {
@@ -109,13 +122,7 @@ module.exports = {
 							}
 						}
 					}
-					result.features = result.features.sort( function(a,b) { 
-						if (a.properties.title > b.properties.title)
-						      return 1;
-						if (a.properties.title < b.properties.title)
-						      return -1;
-						// a must be equal to b
-						return 0; })
+					result.features = result.features.sort( sortRank )
 					callback(err, result)
 				})
 			},

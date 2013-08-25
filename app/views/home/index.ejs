@@ -4,19 +4,32 @@
 
 <div class="container-fluid">
 	<div class='row-fluid'>
+		<div class='span2'>
 		<a href='/report'>Member Sites:</a><br/><br/>
+		</div>
+		<div class='span3'></div>
+		
+		<div class='span4'>
+			<input type='hidden' id="select_site" style="width:400px" />
+		</div>
+	</div>
+	
+	<div class='row-fluid'>
 		<div class='span4 table-scrollable'>
 			<table id='site-list' class='table table-condensed table-hover ' >
 			<% for( var s in geojson.features) { %>
 				<tr><td onclick="selectList(<%= geojson.features[s].properties.id %>)">
-					<b><%= geojson.features[s].properties.title %></b>&nbsp;<br/>
+					<b><%= geojson.features[s].properties.title %></b>&nbsp;
+					(<i><%= geojson.features[s].properties.rank %></i>)
+					<br/>
 					<%= geojson.features[s].properties.address %>&nbsp;<%= geojson.features[s].properties.state %><br/>
 					
 					<% if(user.site_id == 0 || user.site_id == geojson.features[s].properties.id){ %> 
 					<small>
-					<a href='/site/transitions/<%= geojson.features[s].properties.id %>'>Transitions</a>&nbsp;
-					<a href='/site/measures/<%= geojson.features[s].properties.id %>'>Measures</a>&nbsp;
-					<a href='/site/drgs/<%= geojson.features[s].properties.id %>'>Runs</a>&nbsp;
+					<a href='/site/gaps/<%= geojson.features[s].properties.id %>'>Gaps</a>&nbsp;/
+					<a href='/site/transitions/<%= geojson.features[s].properties.id %>'>Transitions</a>&nbsp;/
+					<a href='/site/measures/<%= geojson.features[s].properties.id %>'>Measures</a>&nbsp;/
+					<a href='/site/drgs/<%= geojson.features[s].properties.id %>'>Runs</a>&nbsp;/
 					<a href='/site/benchmarks/<%= geojson.features[s].properties.id %>' title='current rank'>Benchmarks</a>&nbsp;
 					</small>
 					<% } %> 
@@ -52,6 +65,15 @@
 <script>
 var geojson = <%- JSON.stringify(geojson) %>
 
+function site_links(id) {
+	var str = "<a href='/site/gaps/" + id + "'>Gaps</a>&nbsp;/";
+	str += "<a href='/site/transitions/" + id + "'>Transitions</a>&nbsp;/";
+	str += "<a href='/site/measures/" + id + "'>Measures</a>&nbsp;/";
+	str += "<a href='/site/drgs/" + id + "'>Runs</a>&nbsp;/";
+	str += "<a href='/site/benchmarks/" + id + "'>Benchmarks</a>";
+	return str;
+}
+
 var map = L.mapbox.map('map', 'examples.map-20v6611k')
     .setView([<%=latitude%>, <%=longitude%>], <%= zoom %>);
 
@@ -70,11 +92,7 @@ var map = L.mapbox.map('map', 'examples.map-20v6611k')
 								"<tr><a href='"+feature.properties.website+"'>website</a></tr></table>"
 								
 			if( user.site_id == 0 || user.site_id == feature.properties.id ) {
-				popupContent +=	"<hr/>" +
-								"<a href='site/transitions/" + feature.properties.id + "'>Transitions of Care</a><br/>" +
-								"<a href='site/measures/" + feature.properties.id + "'>Measures Run Charts</a><br/>" +
-								"<a href='site/drgs/" + feature.properties.id + "'>DRGs Run Charts</a><br/>" +
-								"<a href='site/benchmarks/" + feature.properties.id + "'>DRGs Benchmark Charts</a><br/>";
+				popupContent +=	"<hr/>" + site_links( feature.properties.id);
 			}
 			
 		    marker.bindPopup(popupContent,{
@@ -107,21 +125,48 @@ function ChangeState( state ) {
 	};
 };
 
-function selectList(id) {
-	//alert("Selected:"+id);
-	console.log("id:"+id)
+function openPopup(id) {
 	for( var s in geojson.features ) {
-		var site = geojson.features[s]
-		if( site.properties.id == id ) {
-			console.log("point:"+ site.geometry.coordinates[1] + "," + site.geometry.coordinates[0])
-			var latlng = new L.LatLng(40.2, -74.0);
-			//map.fireEvent('click', { 
-			//	latlng: L.LatLng(40.2, -74.0)
-			//});
-			//popup.setLatLng( latlng ).setContent("You selected this one").openOn(map)
-			site.marker.fire('click');
-		}
+	var site = geojson.features[s]
+	if( site.properties.id == id ) {
+		//console.log("point:"+ site.geometry.coordinates[1] + "," + site.geometry.coordinates[0])
+		var latlng = new L.LatLng(site.geometry.coordinates[1], site.geometry.coordinates[0]);
+		//map.fireEvent('click', { 
+		//	latlng: L.LatLng(40.2, -74.0)
+		//});
+		//popup.setLatLng( latlng ).setContent("You selected this one").openOn(map)
+		map.setView(latlng, 10);
+		site.marker.fire('click');
 	}
 }
+}
+function selectList(id) {
+	//alert("Selected:"+id);
+	openPopup(id);
+	$('#select_site').select2("val",id);
+}
+
+var site_data = [];
+for( var s in geojson.features ) {
+	var site 	= geojson.features[s];
+	var sid 	= site.properties.id;
+	var tag 	= site.properties.title;
+	site_data.push({id: sid, tag: tag});
+};
+
+function format(item) { return item.tag; };
+
+$('#select_site').select2({
+	placeholder: "Select Site...",
+ 	minimumInputLength: 3,
+	data: {results: site_data, text:'tag'},
+ 	formatSelection: format,
+	formatResult: format
+})
+$('#select_site').on('change', function(e){
+	//alert("selected:"+e.val+ " "+e.added);
+	openPopup(e.val);
+})
+
 </script>
 	

@@ -74,6 +74,8 @@ app.get('/site/bsdmp/:site_id/:drg_id/:m_id/:pop_id/:year/:quarter',
 app.get('/site/benchmarks/:id',					auth, aspect.benchmarks);
 app.post('/site/benchmark',						auth, aspect.benchmark);
 
+app.get('/site/gaps/:id',						auth, aspect.gaps);
+
 app.get('/contact', 							auth, home.contact);
 app.get('/about', 								auth, home.about);
 

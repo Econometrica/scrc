@@ -243,6 +243,27 @@ function getDepartments( fn ) {
 }
 
 module.exports = {
+	gaps: function(req, res) {
+		var id 		= req.params['id']
+		var user 	= req.user
+		console.log("gap:"+id)
+		if( user.site_id != 0 && user.site_id != id ) return res.send('Sorry!!! UnAuthorized')
+		
+		async.parallel([
+			function(callback) {	
+				getSite(id, function(err, result ) {
+					callback( err, result);	
+				})
+			}
+			], function(err, results) {
+					res.render( 'aspect/gaps.ejs', {
+						layout: 'layout.ejs', 
+						user: user,
+						site: results[0],
+					});
+			});
+	},
+	
 	// display transitions of care for particualr site
 	transitions: function(req, res) {
 		var id 		= req.params['id']
