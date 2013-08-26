@@ -97,6 +97,7 @@ app.get('/help', 								auth, help.index);
 app.get('/report', 								auth, report.index);
 app.get('/report/fix', 							auth, report.fix);
 app.get('/report/test', 						auth, report.test);
+app.get('/report/treemap/:id', 					auth, report.treemap);
 
 app.get('/pdfs',		 						auth, pdfs.index);
 app.get('/pdfs/:site/:year/:id',		 		auth, pdfs.download);

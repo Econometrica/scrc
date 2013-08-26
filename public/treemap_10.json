@@ -1,0 +1,35 @@
+{"name":"Analysis",
+"children":[{"name":"Structural Measures",
+			"children":[
+				{"name":"Staffing Changes","value":98,"url":"/site/measure/3?site=10"},
+				{"name":"Leadership Oversight Support","value":0,"url":"/site/measure/2?site=10"},
+				{"name":"Heath Information Technology","value":29,"url":"/site/measure/1?site=10"},
+				{"name":"ALL","value":56,"url":"/site/measure/0?site=10"}]},
+			{"name":"Quality Measures",
+			"children":[
+				{"name":"Mortality","value":1057,"url":"/site/measure/4?site=10"},
+				{"name":"Hospital Acquired Conditions","value":1988,"url":"/site/measure/5?site=10"},
+				{"name":"Readmissions","value":19608,"url":"/site/measure/6?site=10"},
+				{"name":"Prevention Quality Indicators (PQI) (ambulatory sensitive)","value":1974,"url":"/site/measure/7?site=10"},
+				{"name":"Inpatient Quality Indicators (IQI)","value":3117,"url":"/site/measure/8?site=10"},
+				{"name":"Patient Safety Indicators (PSI)","value":1053,"url":"/site/measure/9?site=10"},
+				{"name":"Outpatient Imaging Efficiency Measures","value":9727,"url":"/site/measure/10?site=10"},
+				{"name":"Patient Survey","value":63,"url":"/site/measure/11?site=10"},
+				{"name":"Emergency Department Efficiency","value":60,"url":"/site/measure/12?site=10"},
+				{"name":"Timely & Effective Care - Acute Myocardial Infarction","value":64,"url":"/site/measure/13?site=10"},
+				{"name":"Timely & Effective Care - Heart Failure","value":78,"url":"/site/measure/14?site=10"},
+				{"name":"Timely & Effective Care - Pnemonia","value":9,"url":"/site/measure/15?site=10"}]},
+			{"name":"Utilization Measures",
+			"children":[
+				{"name":"Volume of Services","value":49,"url":"/site/measure/16?site=10"},
+				{"name":"Physician Referral to Post Acute Care Settings","value":90,"url":"/site/measure/17?site=10"},
+				{"name":"Admissions Patterns","value":24,"url":"/site/measure/18?site=10"},
+				{"name":"Readmissions","value":58,"url":"/site/measure/19?site=10"},
+				{"name":"Length of Stay","value":50,"url":"/site/measure/20?site=10"}]},
+			{"name":"Payments",
+			"children":[
+				{"name":"Incentive Payments","value":5,"url":"/site/measure/21?site=10"},
+				{"name":"Medicare Payments","value":83,"url":"/site/measure/22?site=10"}
+				]
+			}
+		]}

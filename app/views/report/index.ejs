@@ -42,18 +42,38 @@ text {
 </style>
 
 <div class='container'>
-<h1>SCRS Quarterly Reports</h1>
+<h1>Important Measures Correlation</h1>
 
 <p id="chart"></p>
+</div>
 
-<aside>Mouseover the year to move forward and backwards through time.</aside>
+<div class='container'>
+	<div class='row'>
+		<div class='span4'>
+		</div>
+		<div class='span4'>
+		</div>
+		<div class='span4'>
+			Measure:
+			<select id="select_measure">
+				<option value='4'>Mortality</option>
+				<option value='5'>Re-admissions</option>
+			</select>	
+		</div>
+	
+	</div>
+</div>
+<div class='container'>
+<aside>Mouse-over the year to move forward and backwards through time.</aside>
 Colored by State</br>
 Size: Number of patients for that period</br>
-Site Ranking determined by multiple criteria using AHP</br>
+</br>
 
 </div>
 <script src="http://d3js.org/d3.v2.js?2.8.1"></script>
+
 <script>
+//$('#select_measure').select2()
 
 // Various accessors that specify the four dimensions of data to visualize.
 
@@ -62,6 +82,9 @@ function y(d) 		{ return d.lifeExpectancy; }
 function radius(d) 	{ return d.population; }
 function color(d) 	{ return d.region; }
 function key(d) 	{ return d.name; }
+
+var minYear = 2000;
+var maxYear	= 2013;
 
 // Chart dimensions.
 var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 39.5},
@@ -111,7 +134,7 @@ svg.append("text")
     .attr("y", 6)
     .attr("dy", ".75em")
     .attr("transform", "rotate(-90)")
-    .text("site ranking");
+    .text("gap");
 
 // Add the year label; the value is set on transition.
 var label = svg.append("text")
@@ -119,7 +142,7 @@ var label = svg.append("text")
     .attr("text-anchor", "end")
     .attr("y", height - 24)
     .attr("x", width)
-    .text(1800);
+    .text(minYear);
 
 // Load the data.
 d3.json("sites2.json", function(sites) {
@@ -127,11 +150,11 @@ d3.json("sites2.json", function(sites) {
   // A bisector since many nation's data is sparsely-defined.
   var bisect = d3.bisector(function(d) { return d[0]; });
 
-  // Add a dot per nation. Initialize the data at 1800, and set the colors.
+  // Add a dot per nation. Initialize the data at minYear, and set the colors.
   var dot = svg.append("g")
       .attr("class", "dots")
     .selectAll(".dot")
-      .data(interpolateData(1800))
+      .data(interpolateData(minYear))
     .enter().append("circle")
       .attr("class", "dot")
       .style("fill", function(d) { return colorScale(color(d)); })
@@ -175,7 +198,7 @@ d3.json("sites2.json", function(sites) {
   // After the transition finishes, you can mouseover to change the year.
   function enableInteraction() {
     var yearScale = d3.scale.linear()
-        .domain([1800, 2009])
+        .domain([minYear, maxYear])
         .range([box.x + 10, box.x + box.width - 10])
         .clamp(true);
 
@@ -204,7 +227,7 @@ d3.json("sites2.json", function(sites) {
   // Tweens the entire chart by first tweening the year, and then the data.
   // For the interpolated data, the dots and label are redrawn.
   function tweenYear() {
-    var year = d3.interpolateNumber(1800, 2009);
+    var year = d3.interpolateNumber(minYear, maxYear);
     return function(t) { displayYear(year(t)); };
   }
 

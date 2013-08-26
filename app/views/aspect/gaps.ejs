@@ -13,9 +13,8 @@ function getStars(id) {
 <div class='container'>
 	<%- partial('site.ejs', {site: site})%>
 
-	<h4>Gap Bender</h4>
+	<h4>Gap Leaderboard</h4>
 	
-	<table class='table'>
 		<div class="accordion" id="accordion3">
 			<div class="accordion-group">
 			
@@ -62,5 +61,17 @@ function getStars(id) {
 				
 			  </div>
 		</div>
-	</table>
+</div>
+<div class='container'>
+	<h4><a href='/report/treemap/<%= site.id %>'>Gap Map&nbsp;<i class='icon-hand-right'></i></a></h4>
+</div>
+<div class='container'>
+	<h4><a href='/report'>Important Measures Correlation...&nbsp;<i class='icon-hand-right'></i></a></h4>
+</div>
+
+<div class='container'>
+	<h4>Your Recommendations...</h4>
+	<div class="well">
+		Work in progress...Coming soon...
+	</div>
 </div>
