@@ -69,11 +69,13 @@ function getSitesGeoJSON( user, fn ) {
 }
 module.exports = {
 	about: function(req, res) {
-		res.render( 'home/about.html', {layout: false});
+		var user = req.user;
+		res.render( 'home/about', {layout: 'layout.ejs', user: user});
 	},
 	
 	contact: function(req, res) {
-		res.render( 'home/contact.html', {layout: false});
+		var user = req.user;
+		res.render( 'home/contact', {layout: 'layout.ejs', user:user});
 	},
 	
 	sites: function(req, res) {
