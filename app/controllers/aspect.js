@@ -443,12 +443,13 @@ module.exports = {
 				//eyes.inspect(series, "Series")
 				
 				var sma5 				= simple_moving_averager(5);
-				var smoothed_series 	= results[3]
-				smoothed_series.site 	= "SMA"
-				for( var d in smoothed_series.data ) {
-					var datum = smoothed_series.data[d]
-					var value = smoothed_series.data[d][1]
-					smoothed_series.data[d][1] = sma5(value)
+				var smoothed_series 	= { site: 'SMA', data:[]}
+				for( var d in series.data ) {
+					var datum 	= series.data[d]
+					var value 	= series.data[d][1]
+					var svalue 	= sma5(value)
+					//console.log(value, svalue)
+					smoothed_series.data.push( [datum[0], svalue])
 				}
 				//eyes.inspect(smoothed_series, "smoothed_series")
 				
