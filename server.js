@@ -78,6 +78,7 @@ app.get('/site/gaps/:id',						auth, aspect.gaps);
 
 app.get('/contact', 							auth, home.contact);
 app.get('/about', 								auth, home.about);
+app.get('/privacy', 							auth, home.privacy);
 
 app.get('/admin',								auth, admin.index);
 

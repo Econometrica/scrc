@@ -77,7 +77,10 @@ module.exports = {
 		var user = req.user;
 		res.render( 'home/contact', {layout: 'layout.ejs', user:user});
 	},
-	
+	privacy: function(req, res) {
+		var user = req.user;
+		res.render( 'home/privacy', {layout: 'layout.ejs', user: user});
+	},
 	sites: function(req, res) {
 		getSitesGeoJSON( function( err, geojson ) {
 			res.send( geojson )
