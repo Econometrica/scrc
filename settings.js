@@ -15,6 +15,7 @@ var express 		= require('express'),
 	crypto 			= require('crypto'),
 	eyes			= require('eyes'),
 	SendGrid 		= require('sendgrid').SendGrid,
+	AWS 			= require('aws-sdk'),
 	winston 		= require('winston');
 	
   	require('winston-papertrail').Papertrail;
@@ -61,7 +62,21 @@ var express 		= require('express'),
 function bootApplication(app) {
 
 	// load config
-	app.config = JSON.parse(fs.readFileSync("./config/config.yaml"));
+	app.config 	= JSON.parse(fs.readFileSync("./config/config.yaml"));
+	app.aws 	= AWS.config.loadFromPath('./config/aws.json');
+	app.s3 		= new AWS.S3({apiVersion: '2006-03-01'});
+	//app.s3.listBuckets(function(error, data) {
+	//  if (error) {
+	//    console.log(error); // error is Response.error
+	//  } else {
+	//    eyes.inspect(data, "aws buckets"); // data is Response.data
+	//  }
+	//});
+	
+	//app.s3.listObjects({Bucket: 'econometrica'}, function (err, data) {
+	//	console.log(err)
+	//  	eyes.inspect(data, "bucket data");
+	//});
 	
 	// define a custom res.message() method
 	// which stores messages in the session

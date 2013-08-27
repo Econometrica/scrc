@@ -1,10 +1,16 @@
 <div class='container'>
+	<% if( user.site_id != 0 ) {%>
+	<%- partial('site.ejs', {site: result})%>
+	<% } %>
+
 	<h4>Available Reports</h4>
 	
-	<ul>
-	<% for( var f in files ) { %>
-		<li>
-			<a href='/pdfs/<%= files[f] %>'> <%= files[f] %> </a>
+	<ul class="thumbnails">
+	<% for( var key in result.files ) { %>
+		<li class='span4'>
+			<a href='<%= result.files[key].pdf %>' class='thumbnail'> 
+				<img src='<%= result.files[key].png %>' width='100' class='img-rounded'/> 
+				<%= result.name %>&nbsp;<%= key %> </a>
 		</li>
 	<%}%>
 	</ul>

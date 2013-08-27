@@ -100,7 +100,7 @@ app.get('/report/test', 						auth, report.test);
 app.get('/report/treemap/:id', 					auth, report.treemap);
 
 app.get('/pdfs',		 						auth, pdfs.index);
-app.get('/pdfs/:site/:year/:id',		 		auth, pdfs.download);
+app.get('/pdfs/:year/:quarter',		 			auth, pdfs.cms);
 
 app.get('/test/:id', 							test.index);
 
