@@ -3,37 +3,37 @@
  "children": [
 	{ "name": "Structural Measures",
    		"children": [
-			{"name":"Staffing Changes","value":98,"url":"/site/measure/3?site=10", "color":"red"},
-			{"name":"Leadership Oversight Support","value":0,"url":"/site/measure/2?site=10", "color":"green"},
-			{"name":"Heath Information Technology","value":29,"url":"/site/measure/1?site=10", "color":"green"},
+			{"name":"Staffing Changes","value":98,"url":"/site/measure/3?site=10", "color":"OrangeRed "},
+			{"name":"Leadership Oversight Support","value":0,"url":"/site/measure/2?site=10", "color":"GreenYellow "},
+			{"name":"Heath Information Technology","value":29,"url":"/site/measure/1?site=10", "color":"GreenYellow "},
 			{"name":"ALL","value":56,"url":"/site/measure/0?site=10", "color":"yellow"}
    		]
 	},
 	{"name":"Quality Measures",
 	"children":[
-		{"name":"Mortality","value":57,"url":"/site/measure/4?site=10","color":"green"},
-		{"name":"Hospital Acquired Conditions","value":88,"url":"/site/measure/5?site=10","color":"green"},
-		{"name":"Readmissions","value":78,"url":"/site/measure/6?site=10","color":"green"},
+		{"name":"Mortality","value":57,"url":"/site/measure/4?site=10","color":"GreenYellow "},
+		{"name":"Hospital Acquired Conditions","value":88,"url":"/site/measure/5?site=10","color":"GreenYellow "},
+		{"name":"Readmissions","value":78,"url":"/site/measure/6?site=10","color":"GreenYellow "},
 		{"name":"Prevention Quality Indicators (PQI)","value":74,"url":"/site/measure/7?site=10","color":"yellow"},
 		{"name":"Inpatient Quality Indicators (IQI)","value":117,"url":"/site/measure/8?site=10","color":"yellow"},
-		{"name":"Patient Safety Indicators (PSI)","value":53,"url":"/site/measure/9?site=10","color":"red"},
-		{"name":"Outpatient Imaging Efficiency Measures","value":27,"url":"/site/measure/10?site=10","color":"red"},
-		{"name":"Patient Survey","value":63,"url":"/site/measure/11?site=10","color":"green"},
-		{"name":"Emergency Department Efficiency","value":60,"url":"/site/measure/12?site=10","color":"green"},
-		{"name":"Acute Myocardial Infarction","value":64,"url":"/site/measure/13?site=10","color":"green"},
-		{"name":"Heart Failure","value":78,"url":"/site/measure/14?site=10","color":"green"},
-		{"name":"Pnemonia","value":9,"url":"/site/measure/15?site=10","color":"green"}]},
+		{"name":"Patient Safety Indicators (PSI)","value":53,"url":"/site/measure/9?site=10","color":"OrangeRed "},
+		{"name":"Outpatient Imaging Efficiency Measures","value":27,"url":"/site/measure/10?site=10","color":"OrangeRed "},
+		{"name":"Patient Survey","value":63,"url":"/site/measure/11?site=10","color":"GreenYellow "},
+		{"name":"Emergency Department Efficiency","value":60,"url":"/site/measure/12?site=10","color":"GreenYellow "},
+		{"name":"Acute Myocardial Infarction","value":64,"url":"/site/measure/13?site=10","color":"GreenYellow "},
+		{"name":"Heart Failure","value":78,"url":"/site/measure/14?site=10","color":"GreenYellow "},
+		{"name":"Pnemonia","value":9,"url":"/site/measure/15?site=10","color":"GreenYellow "}]},
   	{"name":"Utilization Measures",
 	"children":[
-		{"name":"Volume of Services","value":49,"url":"/site/measure/16?site=10","color":"red"},
-		{"name":"Post Acute Care Settings","value":90,"url":"/site/measure/17?site=10","color":"green"},
-		{"name":"Admissions Patterns","value":24,"url":"/site/measure/18?site=10","color":"green"},
-		{"name":"Readmissions","value":58,"url":"/site/measure/19?site=10","color":"green"},
-		{"name":"Length of Stay","value":50,"url":"/site/measure/20?site=10","color":"green"}]},
+		{"name":"Volume of Services","value":49,"url":"/site/measure/16?site=10","color":"OrangeRed "},
+		{"name":"Post Acute Care Settings","value":90,"url":"/site/measure/17?site=10","color":"GreenYellow "},
+		{"name":"Admissions Patterns","value":24,"url":"/site/measure/18?site=10","color":"GreenYellow "},
+		{"name":"Readmissions","value":58,"url":"/site/measure/19?site=10","color":"GreenYellow "},
+		{"name":"Length of Stay","value":50,"url":"/site/measure/20?site=10","color":"GreenYellow "}]},
 	{"name":"Payments",
 	"children":[
-		{"name":"Incentive Payments","value":5,"url":"/site/measure/21?site=10","color":"red"},
-		{"name":"Medicare Payments","value":83,"url":"/site/measure/22?site=10","color":"green"}
+		{"name":"Incentive Payments","value":5,"url":"/site/measure/21?site=10","color":"OrangeRed "},
+		{"name":"Medicare Payments","value":83,"url":"/site/measure/22?site=10","color":"GreenYellow "}
 		]
 	}
  ]

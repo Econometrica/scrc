@@ -1,7 +1,7 @@
 <style>
 #chart {
-  width: 960px;
-  height: 500px;
+  width: 		960px;
+  height: 		500px;
   background: #bbb;
 }
 
@@ -24,11 +24,11 @@ rect.parent,
 }
 
 .grandparent rect {
-  fill: orange;
+  fill: #66ffff;
 }
 
 .grandparent:hover rect {
-  fill: #ee9700;
+  fill: #99ccff;
 }
 
 .children rect.parent,
@@ -41,7 +41,7 @@ rect.parent {
 }
 
 .children:hover rect.child {
-  fill: #aaa;
+  stroke-width: 6px;
 }
 </style>
 
@@ -57,9 +57,9 @@ rect.parent {
 <script>
 
 var margin = {top: 20, right: 0, bottom: 0, left: 0},
-    width = 960,
-    height = 500 - margin.top - margin.bottom,
-    formatNumber = d3.format(",d"),
+    width			= 960,
+    height 			= 500 - margin.top - margin.bottom,
+    formatNumber 	= d3.format(",d"),
     transitioning;
 
 var x = d3.scale.linear()
@@ -83,7 +83,7 @@ var svg = d3.select("#chart").append("svg")
     .attr("height", height + margin.bottom + margin.top)
     .style("margin-left", -margin.left + "px")
     .style("margin.right", -margin.right + "px")
-  .append("g")
+	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .style("shape-rendering", "crispEdges");
 
@@ -171,8 +171,10 @@ d3.json("/treemap2.json", function(root) {
     g.append("rect")
         .attr("class", "parent")
         .call(rect)
+		.on("click", function(d) {
+			if( !d.children ) { window.open(d.url);}
+		})
 		.append("title")
-		.style("fill", function(d) { return d.color;})
         .text(function(d) { return formatNumber(d.value); });
 
     g.append("text")
@@ -180,9 +182,10 @@ d3.json("/treemap2.json", function(root) {
         .text(function(d) { return d.name; })
         .call(text);
 
-    function transition(d) {
-      if (transitioning || !d) return;
-      transitioning = true;
+	function transition(d) {
+		if (transitioning || !d) return;
+
+		transitioning = true;
 
       var g2 = display(d),
           t1 = g1.transition().duration(750),
@@ -226,8 +229,8 @@ d3.json("/treemap2.json", function(root) {
     rect.attr("x", function(d) { return x(d.x); })
         .attr("y", function(d) { return y(d.y); })
         .attr("width", function(d) { return x(d.x + d.dx) - x(d.x); })
-		.style("fill", function(d) { return d.color; })
-        .attr("height", function(d) { return y(d.y + d.dy) - y(d.y); });
+        .attr("height", function(d) { return y(d.y + d.dy) - y(d.y); })
+		.style("fill", function(d) { return d.color; });
   }
 
   function name(d) {
