@@ -3,6 +3,22 @@ var util	= require('util'),
 	async	= require('async'),
 	fs		= require('fs');
 
+function simple_moving_averager(period) {
+    var nums = [];
+    return function(num) {
+        nums.push(num);
+        if (nums.length > period)
+            nums.splice(0,1);  // remove the first element of the array
+        var sum = 0;
+        for (var i in nums)
+            sum += nums[i];
+        var n = period;
+        if (nums.length < period)
+            n = nums.length;
+        return(sum/n);
+    }
+}
+	
 //
 // Retrieve all distinct years in data set
 //
@@ -368,7 +384,7 @@ module.exports = {
 	// generates JSON data for that site ,drg, subpop, measure
 	//
 	sdsm: function(req, res) {
-		//eyes.inspect(req.query, "sdsm query");
+		console.log(req.query, "sdsm query");
 		
 		var site_id 	= req.query['site']
 		var drg_id 		= req.query['drg']
@@ -422,6 +438,21 @@ module.exports = {
 			if( callback ) {
 				res.send(callback + '('+results+');')
 			} else {
+				// do smoothing average of current measure
+				var series 			= results[3]
+				//eyes.inspect(series, "Series")
+				
+				var sma5 				= simple_moving_averager(5);
+				var smoothed_series 	= results[3]
+				smoothed_series.site 	= "SMA"
+				for( var d in smoothed_series.data ) {
+					var datum = smoothed_series.data[d]
+					var value = smoothed_series.data[d][1]
+					smoothed_series.data[d][1] = sma5(value)
+				}
+				//eyes.inspect(smoothed_series, "smoothed_series")
+				
+				results.push( smoothed_series)
 				res.send(results)
 			}
 		})
