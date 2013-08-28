@@ -1,11 +1,10 @@
 {
-    "application":      "SCRC",
+    "application":      "SCRS",
     "copyright":        "&copy; Vightel, 2013",
     "contact":          "Johnathan Crane",
     "contact_mail":     "pat@cappelaere.com",
-    "HOSTBASEURL":      "http://scrc.ecomoetricainc.com",
+    "HOSTBASEURL":      "http://scrs.ecomoetricainc.com",
     "PORT":				80,
     "sendgrid":         false
-	
 }
 

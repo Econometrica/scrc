@@ -1,6 +1,8 @@
 <div class='container'>
 	<% if( user.site_id != 0 ) {%>
 	<%- partial('site.ejs', {site: result})%>
+	<%- partial('breadcrumbs.ejs', {site: site})%>
+	
 	<% } %>
 
 	<h4>Available Reports</h4>
