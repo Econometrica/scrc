@@ -1,14 +1,6 @@
 {
  "name": "Analysis",
  "children": [
-	{ "name": "Structural Measures",
-   		"children": [
-			{"name":"Staffing Changes","value":98,"url":"/site/measure/3?site=10", "color":"OrangeRed "},
-			{"name":"Leadership Oversight Support","value":0,"url":"/site/measure/2?site=10", "color":"GreenYellow "},
-			{"name":"Heath Information Technology","value":29,"url":"/site/measure/1?site=10", "color":"GreenYellow "},
-			{"name":"ALL","value":56,"url":"/site/measure/0?site=10", "color":"yellow"}
-   		]
-	},
 	{"name":"Quality Measures",
 	"children":[
 		{"name":"Mortality","value":57,"url":"/site/measure/4?site=10","color":"GreenYellow "},
@@ -33,7 +25,12 @@
 	{"name":"Payments",
 	"children":[
 		{"name":"Incentive Payments","value":5,"url":"/site/measure/21?site=10","color":"OrangeRed "},
-		{"name":"Medicare Payments","value":83,"url":"/site/measure/22?site=10","color":"GreenYellow "}
+		{"name":"HLM Payments","value":13,"url":"/site/measure/22?site=10","color":"GreenYellow "},
+		{"name":"HLM Payments","value":23,"url":"/site/measure/27?site=10","color":"GreenYellow "},
+		{"name":"HLM Intensive Care Unit","value":44,"url":"/site/measure/27?site=10","color":"GreenYellow "},
+		{"name":"HLM Critical Care Unit","value":32,"url":"/site/measure/27?site=10","color":"OrangeRed "},
+		{"name":"HLM Other Acute Inpatient Care","value":22,"url":"/site/measure/28?site=10","color":"GreenYellow "},
+		{"name":"Post Accute Care Payment By Facility","value":11,"url":"/site/measure/29?site=10","color":"GreenYellow "}
 		]
 	}
  ]
