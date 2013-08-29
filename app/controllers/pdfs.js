@@ -95,7 +95,7 @@ module.exports = {
 					}
 					result.files = files
 				  	//eyes.inspect(result, "bucket data");
-					res.render("pdfs/index", { layout:true, user:user, result:result})
+					res.render("pdfs/index", { layout:true, user:user, site: result, result:result})
 				});
 				
 			})
